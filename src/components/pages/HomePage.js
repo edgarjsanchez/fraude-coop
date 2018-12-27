@@ -113,7 +113,7 @@ export class Home extends Component {
             <Right>
               <Button
                 transparent
-                onPress={() => this.props.navigation.replace("LoginPage")}
+                onPress={() => this.props.navigation.navigate("ViajePage")}
               >
                 <Icon name="add" style={{ color: "white" }} />
               </Button>

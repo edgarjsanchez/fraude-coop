@@ -4,6 +4,7 @@ import { Root } from "native-base";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LoginPage from "./src/components/pages/LoginPage";
 import HomePage from "./src/components/pages/HomePage";
+import ViajePage from "./src/components/pages/ViajePage";
 
 const AppNavigator = createStackNavigator({
   HomePage: {
@@ -17,6 +18,9 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       header: null
     }
+  },
+  ViajePage: {
+    screen: ViajePage
   }
 });
 
