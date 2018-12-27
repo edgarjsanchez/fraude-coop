@@ -9,27 +9,38 @@ import {
   Header,
   Left,
   Body,
+  Text,
   Right,
   Title,
+  Separator,
   Subtitle,
   Toast,
+  ActionSheet,
   Drawer
 } from "native-base";
 import { RefreshControl, AsyncStorage } from "react-native";
 import { getCuentas, getPrestamos } from "../../api/auth";
 import SideBar from "../menu/SideBar";
-import Cuentas from "../cliente/Cuentas";
-import Prestamos from "../cliente/Prestamos";
+import Viajes from "../cliente/Viajes";
 
 export class Home extends Component {
   state = {
     refreshing: false,
-    cuentas: [],
-    prestamos: []
+    viajes: []
   };
 
   componentDidMount() {
-    AsyncStorage.getItem("usuario", (err, usuario) => {
+    this.setState({
+      viajes: [
+        { descripcion: "Ahorros", balance: 12345 },
+        { descripcion: "Xmas", balance: 67890 },
+        { descripcion: "Depositos", balance: 1222.11 },
+        { descripcion: "Depositos 2", balance: 100 },
+        { descripcion: "Depositos 3", balance: 15.12 }
+      ]
+    });
+
+    /*     AsyncStorage.getItem("usuario", (err, usuario) => {
       getCuentas(usuario)
         .then(cuentas => this.setState({ cuentas }))
         .catch(err => {
@@ -41,12 +52,13 @@ export class Home extends Component {
           this.showError("Problemas para obtener balances prestamos.");
         });
     });
+ */
   }
 
   _onRefresh = () => {
     this.setState({ refreshing: true });
     this.setState({
-      cuentas: [
+      viajes: [
         { descripcion: "Ahorros", balance: 12345 },
         { descripcion: "Xmas", balance: 67890 },
         { descripcion: "Depositos", balance: 1222.11 },
@@ -96,22 +108,18 @@ export class Home extends Component {
               </Button>
             </Left>
             <Body>
-              <Title style={{ color: "white" }}>Informacion</Title>
-              <Subtitle style={{ color: "white" }}>Balances</Subtitle>
+              <Title style={{ color: "white" }}>Viajes</Title>
             </Body>
             <Right>
               <Button
                 transparent
                 onPress={() => this.props.navigation.replace("LoginPage")}
               >
-                <Icon name="log-out" style={{ color: "white" }} />
+                <Icon name="add" style={{ color: "white" }} />
               </Button>
             </Right>
           </Header>
           <Content
-            contentContainerStyle={{
-              padding: "2%"
-            }}
             refreshControl={
               <RefreshControl
                 refreshing={this.state.refreshing}
@@ -120,8 +128,7 @@ export class Home extends Component {
               />
             }
           >
-            <Cuentas cuentas={this.state.cuentas} />
-            <Prestamos prestamos={this.state.prestamos} />
+            <Viajes viajes={this.state.viajes} />
           </Content>
           <Footer>
             <FooterTab>
