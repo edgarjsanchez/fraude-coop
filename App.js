@@ -10,7 +10,8 @@ const AppNavigator = createStackNavigator({
   HomePage: {
     screen: HomePage,
     navigationOptions: {
-      header: null
+      header: null,
+      headerBackTitle: null
     }
   },
   LoginPage: {
@@ -20,7 +21,10 @@ const AppNavigator = createStackNavigator({
     }
   },
   ViajePage: {
-    screen: ViajePage
+    screen: ViajePage,
+    navigationOptions: {
+      headerTitle: "Crear Viaje"
+    }
   }
 });
 

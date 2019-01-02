@@ -54,8 +54,15 @@ export default class App extends Component {
   render() {
     return (
       <Content scrollEnabled={false}>
-        <Separator bordered>
-          <Text>REGISTROS VIGENTES</Text>
+        <Separator style={{ height: 45 }} bordered>
+          <Text
+            style={{
+              fontSize: 12,
+              color: "green"
+            }}
+          >
+            REGISTROS VIGENTES
+          </Text>
         </Separator>
         <FlatList
           data={this.state.data}
@@ -69,40 +76,28 @@ export default class App extends Component {
                 </Button>
               }
               body={
-                <Grid>
-                  <Col size={45}>
-                    <Row>
-                      <View>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            alignItems: "baseline",
-                            paddingLeft: 10
-                          }}
-                        >
-                          {item.ciudad}
-                        </Text>
-                      </View>
-                    </Row>
-                    <Row>
-                      <View>
-                        <Text note style={{ paddingLeft: 10 }}>
-                          {item.descripcion}
-                        </Text>
-                      </View>
-                    </Row>
-                  </Col>
-                  <Col size={55} style={{ justifyContent: "center" }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "green"
-                      }}
-                    >
-                      {item.desde} al {item.hasta}
-                    </Text>
-                  </Col>
-                </Grid>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      alignItems: "baseline",
+                      paddingLeft: 10
+                    }}
+                  >
+                    {item.ciudad}
+                  </Text>
+                  <Text note style={{ paddingLeft: 10 }}>
+                    {item.descripcion}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      paddingLeft: 10
+                    }}
+                  >
+                    De {item.desde} a {item.hasta}
+                  </Text>
+                </View>
               }
               right={
                 <Button danger onPress={() => this.removeItem(item.key)}>

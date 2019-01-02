@@ -3,61 +3,77 @@ import {
   Container,
   Form,
   Item,
-  Input,
-  Icon,
   Button,
   Text,
   Toast,
-  Spinner
+  Left,
+  Picker,
+  DatePicker,
+  Label
 } from "native-base";
-import { Image, View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Modal } from "react-native";
 import { PropTypes } from "prop-types";
 
 class ViajeForm extends Component {
   state = {
-    data: {
-      user: "",
-      password: ""
-    },
-    errors: {},
-    loading: false
+    razon: "",
+    pais: "",
+    desde: "",
+    hasta: "",
+    loading: false,
+    errors: { razon: "", pais: "", desde: "", hasa: "" },
+    paises: [],
+    razones: []
   };
 
+  componentDidMount() {
+    var today = new Date();
+    this.setState({ chosenDate: today });
+    this.setState({
+      paises: [
+        { label: "Orlando, FL", value: "1" },
+        { label: "Carolina, PR", value: "2" },
+        { label: "Dallas, TX", value: "3" }
+      ]
+    });
+    this.setState({
+      razones: [
+        { label: "Aviso y Notificacion", value: "1" },
+        { label: "Solo Notificacion", value: "2" },
+        { label: "Registro Ciudad Como Hogar", value: "3" }
+      ]
+    });
+  }
+
   onSubmit = () => {
-    const { data } = this.state;
+    const { razon, pais, desde, hasta } = this.state;
+    const data = { razon: razon, pais: pais, desde: desde, hasta: hasta };
     const errors = this.validate(data);
     this.setState({ errors });
-    if (Object.keys(errors).length === 0) {
-      this.setState({ loading: true });
-      this.props.submit(data).catch(error => {
-        this.setState({ loading: false });
-        if (error.response) {
-          this.showError(error.response.data.errors.global);
-        } else if (error.request) {
-          this.showError("Servicio No Disponible.");
-        }
-      });
-    }
   };
 
   validate = data => {
     const errors = {};
-    if (!data.user) errors.user = "Se require usuario.";
-    if (!data.password) errors.password = "Se requiere password.";
+    if (!data.razon) errors.razon = "Se requiere razon.";
+    if (!data.pais) errors.pais = "Se requiere pais.";
+    if (!data.desde) errors.desde = "Se requiere fecha desde.";
+    if (!data.hasta) errors.hasta = "Se requiere fecha hasta.";
     return errors;
   };
 
-  onChangeUser = text => {
-    const { data } = this.state;
+  onDesdeValueChange = newDate => {
+    const { errors } = this.state;
     this.setState({
-      data: { ...data, user: text }
+      desde: newDate,
+      errors: { ...errors, desde: null }
     });
   };
 
-  onChangePassword = text => {
-    const { data } = this.state;
+  onHastaValueChange = newDate => {
+    const { errors } = this.state;
     this.setState({
-      data: { ...data, password: text }
+      hasta: newDate,
+      errors: { ...errors, hasta: null }
     });
   };
 
@@ -71,37 +87,90 @@ class ViajeForm extends Component {
   };
 
   render() {
-    const { data, errors, loading } = this.state;
+    const { pais, paises, razon, razones, errors, loading } = this.state;
 
     return (
-      <Container style={styles.maincontainer}>
-        <View>
-          <Form>
-            <Item error={!!errors.user}>
-              <Icon active name="person" />
-              <Input
-                value={data.user}
-                onChangeText={this.onChangeUser}
-                autoCapitalize="none"
-                placeholder="Usuario"
+      <Container>
+        <Form>
+          <Item error={!!errors.razon} style={{ marginTop: "5%" }}>
+            <Label>Razon:</Label>
+            <Picker
+              placeholder="Seleccione razon"
+              mode="dropdown"
+              selectedValue={razon}
+              onValueChange={(itemValue, itemIndex) =>
+                this.setState({
+                  razon: itemValue,
+                  errors: { ...errors, razon: null }
+                })
+              }
+            >
+              {razones.map((razon, i) => {
+                return (
+                  <Picker.Item
+                    key={i}
+                    value={razon.value}
+                    label={razon.label}
+                  />
+                );
+              })}
+            </Picker>
+          </Item>
+          <Item error={!!errors.pais} style={{ marginTop: "5%" }}>
+            <Label>Pais:</Label>
+            <Picker
+              placeholder="Seleccione ciudad, pais"
+              mode="dropdown"
+              selectedValue={pais}
+              onValueChange={(itemValue, itemIndex) =>
+                this.setState({
+                  pais: itemValue,
+                  errors: { ...errors, pais: null }
+                })
+              }
+            >
+              {paises.map((pais, i) => {
+                return (
+                  <Picker.Item key={i} value={pais.value} label={pais.label} />
+                );
+              })}
+            </Picker>
+          </Item>
+          <Item error={!!errors.desde} style={{ marginTop: "5%" }}>
+            <Label>Fecha desde:</Label>
+            <DatePicker
+              initialDate={new Date()}
+              minimumDate={new Date()}
+              locale={"en"}
+              modalTransparent
+              animationType={"fade"}
+              androidMode={"default"}
+              placeHolderText="Seleccione fecha"
+              placeHolderTextStyle={{ color: "#adadad" }}
+              onDateChange={this.onDesdeValueChange}
+            />
+          </Item>
+          <Item error={!!errors.hasta} style={{ marginTop: "5%" }}>
+            <Label>Fecha hasta:</Label>
+            <Left>
+              <DatePicker
+                defaultDate={new Date()}
+                minimumDate={new Date()}
+                locale={"en"}
+                modalTransparent
+                animationType={"fade"}
+                androidMode={"default"}
+                placeHolderText="Seleccione fecha"
+                placeHolderTextStyle={{ color: "#adadad" }}
+                onDateChange={this.onHastaValueChange}
               />
-            </Item>
-            <Item password error={!!errors.password}>
-              <Icon active name="lock" />
-              <Input
-                secureTextEntry
-                placeholder="Password"
-                value={data.password}
-                onChangeText={this.onChangePassword}
-              />
-            </Item>
-            <View style={{ marginTop: "10%" }}>
-              <Button success block onPress={this.onSubmit} disabled={loading}>
-                {!loading && <Text>Log in</Text>}
-                {loading && <Spinner color="white" />}
-              </Button>
-            </View>
-          </Form>
+            </Left>
+          </Item>
+        </Form>
+        <View style={{ marginTop: "10%", marginHorizontal: "10%" }}>
+          <Button success block onPress={this.onSubmit} disabled={loading}>
+            <Text>Aceptar</Text>
+          </Button>
         </View>
       </Container>
     );
@@ -118,12 +187,6 @@ export default ViajeForm;
 
 const styles = StyleSheet.create({
   maincontainer: {
-    padding: "5%",
-    flex: 1,
-    justifyContent: "center"
-  },
-  imagecontainer: {
-    alignItems: "center"
-  },
-  logo: { width: 310, height: 90 }
+    flex: 1
+  }
 });
