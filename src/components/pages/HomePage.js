@@ -9,17 +9,13 @@ import {
   Header,
   Left,
   Body,
-  Text,
   Right,
   Title,
-  Separator,
-  Subtitle,
   Toast,
-  ActionSheet,
   Drawer
 } from "native-base";
 import { RefreshControl, AsyncStorage } from "react-native";
-import { getCuentas, getPrestamos } from "../../api/auth";
+import { getViajes } from "../../api/auth";
 import SideBar from "../menu/SideBar";
 import Viajes from "../cliente/Viajes";
 
@@ -30,43 +26,22 @@ export class Home extends Component {
   };
 
   componentDidMount() {
-    this.setState({
-      viajes: [
-        { descripcion: "Ahorros", balance: 12345 },
-        { descripcion: "Xmas", balance: 67890 },
-        { descripcion: "Depositos", balance: 1222.11 },
-        { descripcion: "Depositos 2", balance: 100 },
-        { descripcion: "Depositos 3", balance: 15.12 }
-      ]
-    });
-
-    /*     AsyncStorage.getItem("usuario", (err, usuario) => {
-      getCuentas(usuario)
-        .then(cuentas => this.setState({ cuentas }))
-        .catch(err => {
-          this.showError("Problemas para obtener balances.");
-        });
-      getPrestamos(usuario)
-        .then(prestamos => this.setState({ prestamos }))
-        .catch(err => {
-          this.showError("Problemas para obtener balances prestamos.");
-        });
-    });
- */
+    this.buscarViajes();
   }
 
   _onRefresh = () => {
     this.setState({ refreshing: true });
-    this.setState({
-      viajes: [
-        { descripcion: "Ahorros", balance: 12345 },
-        { descripcion: "Xmas", balance: 67890 },
-        { descripcion: "Depositos", balance: 1222.11 },
-        { descripcion: "Depositos 2", balance: 100 },
-        { descripcion: "Depositos 3", balance: 15.12 }
-      ]
+    this.buscarViajes();
+  };
+
+  buscarViajes = () => {
+    AsyncStorage.getItem("usuario", (err, usuario) => {
+      getViajes(usuario)
+        .then(viajes => this.setState({ viajes, refreshing: false }))
+        .catch(err => {
+          this.showError("Problemas para obtener lista de viajes.");
+        });
     });
-    this.setState({ refreshing: false });
   };
 
   showError = msg => {
@@ -84,6 +59,12 @@ export class Home extends Component {
 
   openDrawer = () => {
     this.drawer._root.open();
+  };
+
+  removeItem = key => {
+    let viajes = this.state.viajes;
+    viajes = viajes.filter(item => item.key !== key);
+    this.setState({ viajes });
   };
 
   render() {
@@ -128,7 +109,7 @@ export class Home extends Component {
               />
             }
           >
-            <Viajes viajes={this.state.viajes} />
+            <Viajes viajes={this.state.viajes} removeItem={this.removeItem} />
           </Content>
           <Footer>
             <FooterTab>

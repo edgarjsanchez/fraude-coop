@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ViajeForm from "../forms/ViajeForm";
-import { addViaje } from "../../api/auth";
+import { putViaje } from "../../api/auth";
 
 class ViajePage extends React.Component {
   submit = data =>
-    addViaje(data).then(res => {
+    putViaje(data).then(res => {
       this.props.navigation.replace("HomePage");
     });
 

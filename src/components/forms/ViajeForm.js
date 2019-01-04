@@ -11,12 +11,13 @@ import {
   DatePicker,
   Label
 } from "native-base";
-import { View, StyleSheet, Modal } from "react-native";
+import { AsyncStorage, View, StyleSheet } from "react-native";
 import { PropTypes } from "prop-types";
 
 class ViajeForm extends Component {
   state = {
     razon: "",
+    cliente: "",
     pais: "",
     desde: "",
     hasta: "",
@@ -28,6 +29,9 @@ class ViajeForm extends Component {
 
   componentDidMount() {
     var today = new Date();
+    AsyncStorage.getItem("usuario", (err, cliente) => {
+      this.setState({ cliente });
+    });
     this.setState({ chosenDate: today });
     this.setState({
       paises: [
@@ -46,16 +50,45 @@ class ViajeForm extends Component {
   }
 
   onSubmit = () => {
-    const { razon, pais, desde, hasta } = this.state;
-    const data = { razon: razon, pais: pais, desde: desde, hasta: hasta };
+    const { razon, pais, desde, hasta, cliente } = this.state;
+
+    let tarjeta = "000000001";
+    const data = {
+      cliente: cliente,
+      ciudad: pais,
+      desde: "2018-01-01",
+      hasta: "2018-01-01",
+      tarjeta: tarjeta,
+      descripcion: razon
+    };
     const errors = this.validate(data);
     this.setState({ errors });
+    if (Object.keys(errors).length === 0) {
+      this.setState({ loading: true });
+      this.props.submit(data).catch(error => {
+        this.setState({ loading: false });
+        if (error.response) {
+          this.showError(error.response.data.errors.global);
+        } else if (error.request) {
+          this.showError("Problemas para actualizar. Trate mas tarde.");
+        }
+      });
+    }
   };
+
+  submit = data =>
+    login(data).then(res => {
+      AsyncStorage.setItem("usuario", res.login);
+      Keychain.setGenericPassword("session", res.token).then(() => {
+        setAuthorization(res.token);
+        this.props.navigation.replace("HomePage");
+      });
+    });
 
   validate = data => {
     const errors = {};
-    if (!data.razon) errors.razon = "Se requiere razon.";
-    if (!data.pais) errors.pais = "Se requiere pais.";
+    //   if (!data.razon) errors.razon = "Se requiere razon.";
+    //   if (!data.pais) errors.pais = "Se requiere pais.";
     if (!data.desde) errors.desde = "Se requiere fecha desde.";
     if (!data.hasta) errors.hasta = "Se requiere fecha hasta.";
     return errors;

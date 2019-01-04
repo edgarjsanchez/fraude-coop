@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import {
-  Grid,
-  Row,
-  Col,
-  Right,
   Content,
   SwipeRow,
   View,
@@ -16,41 +12,6 @@ import {
 import { FlatList } from "react-native";
 
 export default class App extends Component {
-  state = {
-    data: [
-      {
-        key: "1",
-        ciudad: "California, US",
-        desde: "12 Dic 2018",
-        hasta: "24 Dic 2018",
-        tarjeta: "000000000001",
-        descripcion: "Aviso y Notificacion"
-      },
-      {
-        key: "2",
-        ciudad: "Florida, US",
-        desde: "12 Dic 2018",
-        hasta: "24 Dic 2018",
-        tarjeta: "000000000003",
-        descripcion: "Solo Notificacion"
-      },
-      {
-        key: "3",
-        ciudad: "Texas, US",
-        desde: "12 Dic 2018",
-        hasta: "24 Dic 2018",
-        tarjeta: "000000000002",
-        descripcion: "Registro ciudad como hogar"
-      }
-    ]
-  };
-
-  removeItem(key) {
-    let data = this.state.data;
-    data = data.filter(item => item.key !== key);
-    this.setState({ data });
-  }
-
   render() {
     return (
       <Content scrollEnabled={false}>
@@ -65,7 +26,7 @@ export default class App extends Component {
           </Text>
         </Separator>
         <FlatList
-          data={this.state.data}
+          data={this.props.viajes}
           renderItem={({ item }) => (
             <SwipeRow
               leftOpenValue={75}
@@ -100,7 +61,7 @@ export default class App extends Component {
                 </View>
               }
               right={
-                <Button danger onPress={() => this.removeItem(item.key)}>
+                <Button danger onPress={() => this.props.removeItem(item.key)}>
                   <Icon active name="trash" />
                 </Button>
               }

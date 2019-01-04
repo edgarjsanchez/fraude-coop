@@ -9,13 +9,13 @@ export default {
       axiosrequest
         .post("http://192.168.89.130:8888/api/auth", { credentials })
         .then(res => res.data.user),
-    getCuentas: cliente =>
+    getViajes: cliente =>
       axiosrequest
-        .post("http://192.168.89.130:8888/api/cuentas", { cliente })
-        .then(res => res.data.cuentas),
-    getPrestamos: cliente =>
+        .post("http://192.168.89.130:8888/api/viajes", { cliente })
+        .then(res => res.data.viajes),
+    putViaje: viaje =>
       axiosrequest
-        .post("http://192.168.89.130:8888/api/prestamos", { cliente })
-        .then(res => res.data.prestamos)
+        .put("http://192.168.89.130:8888/api/viajes", { viaje })
+        .then(res => res.data)
   }
 };
