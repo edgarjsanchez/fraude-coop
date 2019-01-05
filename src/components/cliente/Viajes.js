@@ -10,6 +10,8 @@ import {
   Left
 } from "native-base";
 import { FlatList } from "react-native";
+import moment from "moment";
+import "moment/locale/es";
 
 export default class App extends Component {
   render() {
@@ -32,7 +34,7 @@ export default class App extends Component {
               leftOpenValue={75}
               rightOpenValue={-75}
               left={
-                <Button success onPress={() => alert(item.ciudad)}>
+                <Button success onPress={() => alert(item.key)}>
                   <Icon active name="add" />
                 </Button>
               }
@@ -45,7 +47,7 @@ export default class App extends Component {
                       paddingLeft: 10
                     }}
                   >
-                    {item.ciudad}
+                    {item.pais}
                   </Text>
                   <Text note style={{ paddingLeft: 10 }}>
                     {item.descripcion}
@@ -56,7 +58,8 @@ export default class App extends Component {
                       paddingLeft: 10
                     }}
                   >
-                    De {item.desde} a {item.hasta}
+                    De {moment(item.desde).format("ll")} a{" "}
+                    {moment(item.hasta).format("ll")}
                   </Text>
                 </View>
               }

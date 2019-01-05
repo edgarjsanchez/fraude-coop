@@ -13,21 +13,24 @@ import {
 } from "native-base";
 import { AsyncStorage, View, StyleSheet } from "react-native";
 import { PropTypes } from "prop-types";
+import moment from "moment";
+import "moment/locale/es";
 
 class ViajeForm extends Component {
   state = {
-    razon: "",
+    descripcion: "",
     cliente: "",
     pais: "",
     desde: "",
     hasta: "",
     loading: false,
-    errors: { razon: "", pais: "", desde: "", hasa: "" },
+    errors: { descripcion: "", pais: "", desde: "", hasta: "" },
     paises: [],
     razones: []
   };
 
   componentDidMount() {
+    moment.locale("es");
     var today = new Date();
     AsyncStorage.getItem("usuario", (err, cliente) => {
       this.setState({ cliente });
@@ -35,31 +38,33 @@ class ViajeForm extends Component {
     this.setState({ chosenDate: today });
     this.setState({
       paises: [
-        { label: "Orlando, FL", value: "1" },
-        { label: "Carolina, PR", value: "2" },
-        { label: "Dallas, TX", value: "3" }
+        { label: "Orlando, FL", value: "Orlando, FL" },
+        { label: "Carolina, PR", value: "Carolina, PR" },
+        { label: "Dallas, TX", value: "Dallas, TX" }
       ]
     });
     this.setState({
       razones: [
-        { label: "Aviso y Notificacion", value: "1" },
-        { label: "Solo Notificacion", value: "2" },
-        { label: "Registro Ciudad Como Hogar", value: "3" }
+        { label: "Aviso y Notificacion", value: "Aviso y Notificacion" },
+        { label: "Solo Notificacion", value: "Solo Notificacion" },
+        {
+          label: "Registro Ciudad Como Hogar",
+          value: "Registro Ciudad Como Hogar"
+        }
       ]
     });
   }
 
   onSubmit = () => {
-    const { razon, pais, desde, hasta, cliente } = this.state;
-
-    let tarjeta = "000000001";
+    const { pais, desde, hasta, descripcion, cliente } = this.state;
+    const tarjeta = "000000001";
     const data = {
       cliente: cliente,
-      ciudad: pais,
-      desde: "2018-01-01",
-      hasta: "2018-01-01",
+      pais: pais,
+      desde: moment(desde).format("YYYYMMDD"),
+      hasta: moment(hasta).format("YYYYMMDD"),
       tarjeta: tarjeta,
-      descripcion: razon
+      descripcion: descripcion
     };
     const errors = this.validate(data);
     this.setState({ errors });
@@ -87,8 +92,8 @@ class ViajeForm extends Component {
 
   validate = data => {
     const errors = {};
-    //   if (!data.razon) errors.razon = "Se requiere razon.";
-    //   if (!data.pais) errors.pais = "Se requiere pais.";
+    if (!data.descripcion) errors.descripcion = "Se requiere razon.";
+    if (!data.pais) errors.pais = "Se requiere pais.";
     if (!data.desde) errors.desde = "Se requiere fecha desde.";
     if (!data.hasta) errors.hasta = "Se requiere fecha hasta.";
     return errors;
@@ -120,21 +125,21 @@ class ViajeForm extends Component {
   };
 
   render() {
-    const { pais, paises, razon, razones, errors, loading } = this.state;
+    const { pais, paises, descripcion, razones, errors, loading } = this.state;
 
     return (
       <Container>
         <Form>
-          <Item error={!!errors.razon} style={{ marginTop: "5%" }}>
+          <Item error={!!errors.descripcion} style={{ marginTop: "5%" }}>
             <Label>Razon:</Label>
             <Picker
               placeholder="Seleccione razon"
               mode="dropdown"
-              selectedValue={razon}
+              selectedValue={descripcion}
               onValueChange={(itemValue, itemIndex) =>
                 this.setState({
-                  razon: itemValue,
-                  errors: { ...errors, razon: null }
+                  descripcion: itemValue,
+                  errors: { ...errors, descripcion: null }
                 })
               }
             >

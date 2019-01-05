@@ -15,7 +15,7 @@ import {
   Drawer
 } from "native-base";
 import { RefreshControl, AsyncStorage } from "react-native";
-import { getViajes } from "../../api/auth";
+import { getViajes, deleteViaje } from "../../api/auth";
 import SideBar from "../menu/SideBar";
 import Viajes from "../cliente/Viajes";
 
@@ -62,9 +62,15 @@ export class Home extends Component {
   };
 
   removeItem = key => {
-    let viajes = this.state.viajes;
-    viajes = viajes.filter(item => item.key !== key);
-    this.setState({ viajes });
+    deleteViaje(key)
+      .then(() => {
+        let viajes = this.state.viajes;
+        viajes = viajes.filter(item => item.key !== key);
+        this.setState({ viajes });
+      })
+      .catch(err => {
+        this.showError("Problemas para eliminar viaje.");
+      });
   };
 
   render() {

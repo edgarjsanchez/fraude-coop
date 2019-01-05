@@ -16,6 +16,10 @@ export default {
     putViaje: viaje =>
       axiosrequest
         .put("http://192.168.89.130:8888/api/viajes", { viaje })
+        .then(res => res.data),
+    deleteViaje: key =>
+      axiosrequest
+        .delete(`http://192.168.89.130:8888/api/viajes/${key}`)
         .then(res => res.data)
   }
 };
