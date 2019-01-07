@@ -31,13 +31,7 @@ export default class App extends Component {
           data={this.props.viajes}
           renderItem={({ item }) => (
             <SwipeRow
-              leftOpenValue={75}
               rightOpenValue={-75}
-              left={
-                <Button success onPress={() => alert(item.key)}>
-                  <Icon active name="add" />
-                </Button>
-              }
               body={
                 <View>
                   <Text
@@ -58,7 +52,7 @@ export default class App extends Component {
                       paddingLeft: 10
                     }}
                   >
-                    De {moment(item.desde).format("ll")} a{" "}
+                    De {moment(item.desde).format("ll")} a
                     {moment(item.hasta).format("ll")}
                   </Text>
                 </View>

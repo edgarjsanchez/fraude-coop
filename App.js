@@ -7,17 +7,17 @@ import HomePage from "./src/components/pages/HomePage";
 import ViajePage from "./src/components/pages/ViajePage";
 
 const AppNavigator = createStackNavigator({
-  LoginPage: {
-    screen: LoginPage,
-    navigationOptions: {
-      header: null
-    }
-  },
   HomePage: {
     screen: HomePage,
     navigationOptions: {
       header: null,
       headerBackTitle: null
+    }
+  },
+  LoginPage: {
+    screen: LoginPage,
+    navigationOptions: {
+      header: null
     }
   },
 

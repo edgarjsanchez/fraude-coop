@@ -122,12 +122,6 @@ export class Home extends Component {
               <Button onPress={() => this.toggleTab1()}>
                 <Icon name="apps" />
               </Button>
-              <Button onPress={() => this.toggleTab2()}>
-                <Icon name="camera" />
-              </Button>
-              <Button onPress={() => this.toggleTab3()}>
-                <Icon name="compass" />
-              </Button>
               <Button onPress={() => this.toggleTab4()}>
                 <Icon name="contact" />
               </Button>

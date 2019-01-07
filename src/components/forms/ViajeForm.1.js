@@ -6,60 +6,16 @@ import {
   Button,
   Text,
   Toast,
-  Input,
+  Left,
   Picker,
-  Label,
-  Right
+  DatePicker,
+  Label
 } from "native-base";
 import { AsyncStorage, View, StyleSheet } from "react-native";
 import { PropTypes } from "prop-types";
 import moment from "moment";
 import "moment/locale/es";
 import DateRangePicker from "../../utils/DateRangePicker";
-import { LocaleConfig } from "react-native-calendars";
-
-LocaleConfig.locales["es"] = {
-  monthNames: [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre"
-  ],
-  monthNamesShort: [
-    "Ene.",
-    "Feb.",
-    "Mar",
-    "Abr",
-    "May",
-    "Jun",
-    "Jul.",
-    "Ago",
-    "Sept.",
-    "Oct.",
-    "Nov.",
-    "Dec."
-  ],
-  dayNames: [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miercoles",
-    "Jueves",
-    "Viernes",
-    "Sabado"
-  ],
-  dayNamesShort: ["Dom.", "Lun.", "Mar.", "Mie.", "Jue.", "Vie.", "Sab."]
-};
-
-LocaleConfig.defaultLocale = "es";
 
 class ViajeForm extends Component {
   state = {
@@ -68,15 +24,15 @@ class ViajeForm extends Component {
     pais: "",
     desde: "",
     hasta: "",
-    rango: "",
     loading: false,
-    errors: { descripcion: "", pais: "", rango: "" },
+    errors: { descripcion: "", pais: "", desde: null, hasta: null },
     paises: [],
     razones: []
   };
 
   componentDidMount() {
     moment.locale("es");
+    var today = new Date();
     AsyncStorage.getItem("usuario", (err, cliente) => {
       this.setState({ cliente });
     });
@@ -140,11 +96,31 @@ class ViajeForm extends Component {
     const errors = {};
     if (!data.descripcion) errors.descripcion = "Se requiere razon.";
     if (!data.pais) errors.pais = "Se requiere pais.";
-    if (!data.desde) errors.rango = "Se requiere rango de fechas.";
-    if (data.desde == "Invalid date")
-      errors.rango = "Se requiere rango de fechas.";
-
+    if (!data.desde) errors.desde = "Se requiere fecha desde.";
+    if (data.desde == "Invalid date") errors.desde = "Se requiere fecha desde.";
+    if (data.hasta == "Invalid date") errors.hasta = "Se requiere fecha desde.";
+    if (!data.hasta) errors.hasta = "Se requiere fecha hasta.";
+    if (data.desde > data.hasta) {
+      errors.hasta = "Hasta no puede ser menor a desde.";
+      this.showError("Fecha hasta no puede ser menor a fecha desde.");
+    }
     return errors;
+  };
+
+  onDesdeValueChange = newDate => {
+    const { errors } = this.state;
+    this.setState({
+      desde: newDate,
+      errors: { ...errors, desde: null }
+    });
+  };
+
+  onHastaValueChange = newDate => {
+    const { errors } = this.state;
+    this.setState({
+      hasta: newDate,
+      errors: { ...errors, hasta: null }
+    });
   };
 
   showError = msg => {
@@ -164,19 +140,13 @@ class ViajeForm extends Component {
       razones,
       errors,
       loading,
-      desde,
-      hasta,
-      rango
+      desde
     } = this.state;
 
     return (
       <Container>
         <Form>
-          <Item
-            fixedLabel
-            error={!!errors.descripcion}
-            style={{ marginTop: "5%" }}
-          >
+          <Item error={!!errors.descripcion} style={{ marginTop: "5%" }}>
             <Label>Razon:</Label>
             <Picker
               placeholder="Seleccione razon"
@@ -202,7 +172,7 @@ class ViajeForm extends Component {
               })}
             </Picker>
           </Item>
-          <Item fixedLabel error={!!errors.pais} style={{ marginTop: "5%" }}>
+          <Item error={!!errors.pais} style={{ marginTop: "5%" }}>
             <Label>Pais:</Label>
             <Picker
               placeholder="Seleccione ciudad, pais"
@@ -224,26 +194,44 @@ class ViajeForm extends Component {
               })}
             </Picker>
           </Item>
-          <Item fixedLabel error={!!errors.rango}>
-            <Label>Periodo:</Label>
-            <Input value={rango} />
+          <Item error={!!errors.desde} style={{ marginTop: "5%" }}>
+            <Label>Fecha desde:</Label>
+            <DatePicker
+              locale={"en"}
+              modalTransparent
+              animationType={"fade"}
+              androidMode={"default"}
+              placeHolderText="Seleccione fecha"
+              placeHolderTextStyle={{ color: "#adadad" }}
+              onDateChange={this.onDesdeValueChange}
+              mode="date"
+            />
           </Item>
-          <Item error={!!errors.rango}>
-            <View style={styles.container}>
-              <DateRangePicker
-                onSuccess={(desde, hasta) =>
-                  this.setState({ desde, hasta, rango: desde + " a " + hasta })
-                }
-                theme={{ markColor: "red", markTextColor: "white" }}
-                minDate={new Date()}
+          <Item error={!!errors.hasta} style={{ marginTop: "5%" }}>
+            <Label>Fecha hasta:</Label>
+            <Left>
+              <DatePicker
+                locale={"en"}
+                modalTransparent
+                animationType={"fade"}
+                androidMode={"default"}
+                placeHolderText="Seleccione fecha"
+                placeHolderTextStyle={{ color: "#adadad" }}
+                onDateChange={this.onHastaValueChange}
+                mode="date"
               />
-            </View>
+            </Left>
           </Item>
         </Form>
         <View style={{ marginTop: "10%", marginHorizontal: "10%" }}>
           <Button success block onPress={this.onSubmit} disabled={loading}>
             <Text>Aceptar</Text>
           </Button>
+          <DateRangePicker
+            initialRange={["2018-04-01", "2018-04-10"]}
+            onSuccess={(s, e) => alert(s + "||" + e)}
+            theme={{ markColor: "red", markTextColor: "white" }}
+          />
         </View>
       </Container>
     );
@@ -261,9 +249,5 @@ export default ViajeForm;
 const styles = StyleSheet.create({
   maincontainer: {
     flex: 1
-  },
-  container: {
-    flex: 1,
-    alignItems: "stretch"
   }
 });
