@@ -8,8 +8,7 @@ import {
   Toast,
   Input,
   Picker,
-  Label,
-  Right
+  Label
 } from "native-base";
 import { AsyncStorage, View, StyleSheet } from "react-native";
 import { PropTypes } from "prop-types";
@@ -63,7 +62,6 @@ LocaleConfig.defaultLocale = "es";
 
 class ViajeForm extends Component {
   state = {
-    descripcion: "",
     cliente: "",
     pais: "",
     desde: "",
@@ -75,44 +73,54 @@ class ViajeForm extends Component {
     razones: []
   };
 
-  componentDidMount() {
+  componentWillMount() {
+    //Si viene con data para editar
+    if (this.props.viaje) {
+      const { key, descripcion, pais, desde, hasta } = this.props.viaje;
+      this.setState({
+        key,
+        descripcion,
+        pais,
+        desde,
+        hasta,
+        rango: desde + " a " + hasta
+      });
+    }
+
     moment.locale("es");
     AsyncStorage.getItem("usuario", (err, cliente) => {
-      this.setState({ cliente });
-    });
-    this.setState({
-      paises: [
-        { label: "Orlando, FL", value: "Orlando, FL" },
-        { label: "Carolina, PR", value: "Carolina, PR" },
-        { label: "Dallas, TX", value: "Dallas, TX" }
-      ]
-    });
-    this.setState({
-      razones: [
-        { label: "Aviso y Notificacion", value: "Aviso y Notificacion" },
-        { label: "Solo Notificacion", value: "Solo Notificacion" },
-        {
-          label: "Registro Ciudad Como Hogar",
-          value: "Registro Ciudad Como Hogar"
-        }
-      ]
+      this.setState({
+        cliente,
+        paises: [
+          { label: "Orlando, FL", value: "Orlando, FL" },
+          { label: "Carolina, PR", value: "Carolina, PR" },
+          { label: "Dallas, TX", value: "Dallas, TX" }
+        ],
+        razones: [
+          { label: "Aviso y Notificacion", value: "Aviso y Notificacion" },
+          { label: "Solo Notificacion", value: "Solo Notificacion" },
+          {
+            label: "Registro Ciudad Como Hogar",
+            value: "Registro Ciudad Como Hogar"
+          }
+        ]
+      });
     });
   }
 
   onSubmit = () => {
-    const { pais, desde, hasta, descripcion, cliente } = this.state;
+    const { key, pais, desde, hasta, descripcion, cliente } = this.state;
     const tarjeta = "000000001";
     const data = {
+      key: key,
       cliente: cliente,
       pais: pais,
-      desde: moment(desde).format("YYYYMMDD"),
-      hasta: moment(hasta).format("YYYYMMDD"),
+      desde: moment(desde).format("YYYY-MM-DD"),
+      hasta: moment(hasta).format("YYYY-MM-DD"),
       tarjeta: tarjeta,
       descripcion: descripcion
     };
-    console.log(data);
     const errors = this.validate(data);
-    console.log(errors);
     this.setState({ errors });
     if (Object.keys(errors).length === 0) {
       this.setState({ loading: true });
@@ -127,14 +135,13 @@ class ViajeForm extends Component {
     }
   };
 
-  submit = data =>
-    login(data).then(res => {
-      AsyncStorage.setItem("usuario", res.login);
-      Keychain.setGenericPassword("session", res.token).then(() => {
-        setAuthorization(res.token);
-        this.props.navigation.replace("HomePage");
-      });
+  onSuccess = (newdesde, newhasta) => {
+    this.setState({
+      desde: newdesde,
+      hasta: newhasta,
+      rango: newdesde + " a " + newhasta
     });
+  };
 
   validate = data => {
     const errors = {};
@@ -168,7 +175,6 @@ class ViajeForm extends Component {
       hasta,
       rango
     } = this.state;
-
     return (
       <Container>
         <Form>
@@ -210,9 +216,9 @@ class ViajeForm extends Component {
               Header="Escoja"
               iosHeader="Escoja"
               selectedValue={pais}
-              onValueChange={(itemValue, itemIndex) =>
+              onValueChange={(value, index) =>
                 this.setState({
-                  pais: itemValue,
+                  pais: value,
                   errors: { ...errors, pais: null }
                 })
               }
@@ -231,9 +237,8 @@ class ViajeForm extends Component {
           <Item error={!!errors.rango}>
             <View style={styles.container}>
               <DateRangePicker
-                onSuccess={(desde, hasta) =>
-                  this.setState({ desde, hasta, rango: desde + " a " + hasta })
-                }
+                initialRange={[desde, hasta]}
+                onSuccess={(ndesde, nhasta) => this.onSuccess(ndesde, nhasta)}
                 theme={{ markColor: "red", markTextColor: "white" }}
                 minDate={new Date()}
               />

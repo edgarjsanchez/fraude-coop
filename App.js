@@ -5,8 +5,16 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import LoginPage from "./src/components/pages/LoginPage";
 import HomePage from "./src/components/pages/HomePage";
 import ViajePage from "./src/components/pages/ViajePage";
+import EditViajePage from "./src/components/pages/EditViajePage";
+import Viajes from "./src/components/cliente/Viajes";
 
 const AppNavigator = createStackNavigator({
+  LoginPage: {
+    screen: LoginPage,
+    navigationOptions: {
+      header: null
+    }
+  },
   HomePage: {
     screen: HomePage,
     navigationOptions: {
@@ -14,17 +22,19 @@ const AppNavigator = createStackNavigator({
       headerBackTitle: null
     }
   },
-  LoginPage: {
-    screen: LoginPage,
-    navigationOptions: {
-      header: null
-    }
+  Viajes: {
+    screen: Viajes
   },
-
   ViajePage: {
     screen: ViajePage,
     navigationOptions: {
       headerTitle: "Crear Viaje"
+    }
+  },
+  EditViajePage: {
+    screen: EditViajePage,
+    navigationOptions: {
+      headerTitle: "Modificar Viaje"
     }
   }
 });

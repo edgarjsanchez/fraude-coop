@@ -20,6 +20,10 @@ export default {
     deleteViaje: key =>
       axiosrequest
         .delete(`http://192.168.89.130:8888/api/viajes/${key}`)
+        .then(res => res.data),
+    updateViaje: viaje =>
+      axiosrequest
+        .post(`http://192.168.89.130:8888/api/viajes/${viaje.key}`, { viaje })
         .then(res => res.data)
   }
 };

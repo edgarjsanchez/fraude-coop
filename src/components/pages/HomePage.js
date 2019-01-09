@@ -115,7 +115,11 @@ export class Home extends Component {
               />
             }
           >
-            <Viajes viajes={this.state.viajes} removeItem={this.removeItem} />
+            <Viajes
+              viajes={this.state.viajes}
+              removeItem={this.removeItem}
+              navigator={this.props.navigation}
+            />
           </Content>
           <Footer>
             <FooterTab>

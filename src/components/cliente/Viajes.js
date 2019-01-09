@@ -9,7 +9,7 @@ import {
   Separator,
   Left
 } from "native-base";
-import { FlatList } from "react-native";
+import { FlatList, TouchableOpacity } from "react-native";
 import moment from "moment";
 import "moment/locale/es";
 
@@ -34,27 +34,35 @@ export default class App extends Component {
               rightOpenValue={-75}
               body={
                 <View>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      alignItems: "baseline",
-                      paddingLeft: 10
-                    }}
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigator.navigate("EditViajePage", {
+                        viaje: item
+                      })
+                    }
                   >
-                    {item.pais}
-                  </Text>
-                  <Text note style={{ paddingLeft: 10 }}>
-                    {item.descripcion}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      paddingLeft: 10
-                    }}
-                  >
-                    De {moment(item.desde).format("ll")} a
-                    {moment(item.hasta).format("ll")}
-                  </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        alignItems: "baseline",
+                        paddingLeft: 10
+                      }}
+                    >
+                      {item.pais}
+                    </Text>
+                    <Text note style={{ paddingLeft: 10 }}>
+                      {item.descripcion}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        paddingLeft: 10
+                      }}
+                    >
+                      De {moment(item.desde).format("ll")} a{" "}
+                      {moment(item.hasta).format("ll")}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               }
               right={
