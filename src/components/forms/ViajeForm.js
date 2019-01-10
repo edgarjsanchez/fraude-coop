@@ -16,69 +16,41 @@ import moment from "moment";
 import "moment/locale/es";
 import DateRangePicker from "../../utils/DateRangePicker";
 import { LocaleConfig } from "react-native-calendars";
+import { espanol } from "../../utils/calendario";
 
-LocaleConfig.locales["es"] = {
-  monthNames: [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre"
-  ],
-  monthNamesShort: [
-    "Ene.",
-    "Feb.",
-    "Mar",
-    "Abr",
-    "May",
-    "Jun",
-    "Jul.",
-    "Ago",
-    "Sept.",
-    "Oct.",
-    "Nov.",
-    "Dec."
-  ],
-  dayNames: [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miercoles",
-    "Jueves",
-    "Viernes",
-    "Sabado"
-  ],
-  dayNamesShort: ["Dom.", "Lun.", "Mar.", "Mie.", "Jue.", "Vie.", "Sab."]
-};
-
+LocaleConfig.locales["es"] = espanol;
 LocaleConfig.defaultLocale = "es";
 
 class ViajeForm extends Component {
   state = {
     cliente: "",
+    tarjeta: "",
     pais: "",
     desde: "",
     hasta: "",
     rango: "",
     loading: false,
-    errors: { descripcion: "", pais: "", rango: "" },
+    errors: { tarjeta: "", descripcion: "", pais: "", rango: "" },
     paises: [],
-    razones: []
+    razones: [],
+    tarjetas: [],
+    selectedItems: []
   };
 
   componentWillMount() {
     //Si viene con data para editar
     if (this.props.viaje) {
-      const { key, descripcion, pais, desde, hasta } = this.props.viaje;
+      const {
+        key,
+        tarjeta,
+        descripcion,
+        pais,
+        desde,
+        hasta
+      } = this.props.viaje;
       this.setState({
         key,
+        tarjeta,
         descripcion,
         pais,
         desde,
@@ -86,11 +58,14 @@ class ViajeForm extends Component {
         rango: desde + " a " + hasta
       });
     }
-
-    moment.locale("es");
     AsyncStorage.getItem("usuario", (err, cliente) => {
       this.setState({
         cliente,
+        tarjetas: [
+          { label: "0000000000000001", value: "0000000000000001" },
+          { label: "0000000000000002", value: "0000000000000002" },
+          { label: "Todas", value: "Todas" }
+        ],
         paises: [
           { label: "Orlando, FL", value: "Orlando, FL" },
           { label: "Carolina, PR", value: "Carolina, PR" },
@@ -109,8 +84,15 @@ class ViajeForm extends Component {
   }
 
   onSubmit = () => {
-    const { key, pais, desde, hasta, descripcion, cliente } = this.state;
-    const tarjeta = "000000001";
+    const {
+      key,
+      tarjeta,
+      pais,
+      desde,
+      hasta,
+      descripcion,
+      cliente
+    } = this.state;
     const data = {
       key: key,
       cliente: cliente,
@@ -135,7 +117,7 @@ class ViajeForm extends Component {
     }
   };
 
-  onSuccess = (newdesde, newhasta) => {
+  onSuccessDatePicker = (newdesde, newhasta) => {
     this.setState({
       desde: newdesde,
       hasta: newhasta,
@@ -165,6 +147,7 @@ class ViajeForm extends Component {
 
   render() {
     const {
+      tarjeta,
       pais,
       paises,
       descripcion,
@@ -173,11 +156,39 @@ class ViajeForm extends Component {
       loading,
       desde,
       hasta,
-      rango
+      rango,
+      tarjetas
     } = this.state;
+
     return (
       <Container>
         <Form>
+          <Item fixedLabel error={!!errors.tarjeta} style={{ marginTop: "5%" }}>
+            <Label>Tarjeta:</Label>
+            <Picker
+              placeholder="Seleccione tarjetas"
+              mode="dropdown"
+              Header="Escoja"
+              iosHeader="Escoja"
+              selectedValue={tarjeta}
+              onValueChange={(value, index) =>
+                this.setState({
+                  tarjeta: value,
+                  errors: { ...errors, tarjeta: null }
+                })
+              }
+            >
+              {tarjetas.map((tarjeta, i) => {
+                return (
+                  <Picker.Item
+                    key={i}
+                    value={tarjeta.value}
+                    label={tarjeta.label}
+                  />
+                );
+              })}
+            </Picker>
+          </Item>
           <Item
             fixedLabel
             error={!!errors.descripcion}
@@ -238,7 +249,9 @@ class ViajeForm extends Component {
             <View style={styles.container}>
               <DateRangePicker
                 initialRange={[desde, hasta]}
-                onSuccess={(ndesde, nhasta) => this.onSuccess(ndesde, nhasta)}
+                onSuccess={(ndesde, nhasta) =>
+                  this.onSuccessDatePicker(ndesde, nhasta)
+                }
                 theme={{ markColor: "red", markTextColor: "white" }}
                 minDate={new Date()}
               />

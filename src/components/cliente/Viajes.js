@@ -41,6 +41,10 @@ export default class App extends Component {
                       })
                     }
                   >
+                    <Text style={{ paddingLeft: 10 }}>{item.tarjeta}</Text>
+                    <Text note style={{ paddingLeft: 10 }}>
+                      {item.descripcion}
+                    </Text>
                     <Text
                       style={{
                         fontSize: 14,
@@ -49,9 +53,6 @@ export default class App extends Component {
                       }}
                     >
                       {item.pais}
-                    </Text>
-                    <Text note style={{ paddingLeft: 10 }}>
-                      {item.descripcion}
                     </Text>
                     <Text
                       style={{
