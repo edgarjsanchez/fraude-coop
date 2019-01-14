@@ -32,7 +32,7 @@ class SideBar extends Component {
               button
               onPress={() => this.props.navigator.navigate("LoginPage")}
             >
-              <Text>Pagos</Text>
+              <Text>Mantenimiento Telefonos</Text>
             </ListItem>
             <ListItem>
               <Text>Transferencias</Text>
@@ -56,7 +56,10 @@ class SideBar extends Component {
                 <Switch value={false} />
               </Right>
             </ListItem>
-            <ListItem>
+            <ListItem
+              button
+              onPress={() => this.props.navigator.navigate("LoginPage")}
+            >
               <Text>Log out</Text>
             </ListItem>
           </List>

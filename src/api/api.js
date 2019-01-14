@@ -24,6 +24,10 @@ export default {
     updateViaje: viaje =>
       axiosrequest
         .post(`http://192.168.89.130:8888/api/viajes/${viaje.key}`, { viaje })
-        .then(res => res.data)
+        .then(res => res.data),
+    getTarjetas: cliente =>
+      axiosrequest
+        .post("http://192.168.89.130:8888/api/tarjetas", { cliente })
+        .then(res => res.data.tarjetas)
   }
 };

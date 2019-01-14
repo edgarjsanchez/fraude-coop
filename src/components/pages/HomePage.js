@@ -25,7 +25,7 @@ export class Home extends Component {
     viajes: []
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.buscarViajes();
   }
 

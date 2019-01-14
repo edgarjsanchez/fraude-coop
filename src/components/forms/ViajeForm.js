@@ -17,6 +17,7 @@ import "moment/locale/es";
 import DateRangePicker from "../../utils/DateRangePicker";
 import { LocaleConfig } from "react-native-calendars";
 import { espanol } from "../../utils/calendario";
+import { getTarjetas } from "../../api/auth";
 
 LocaleConfig.locales["es"] = espanol;
 LocaleConfig.defaultLocale = "es";
@@ -59,13 +60,9 @@ class ViajeForm extends Component {
       });
     }
     AsyncStorage.getItem("usuario", (err, cliente) => {
+      this.buscarTarjetas(cliente);
       this.setState({
         cliente,
-        tarjetas: [
-          { label: "0000000000000001", value: "0000000000000001" },
-          { label: "0000000000000002", value: "0000000000000002" },
-          { label: "Todas", value: "Todas" }
-        ],
         paises: [
           { label: "Orlando, FL", value: "Orlando, FL" },
           { label: "Carolina, PR", value: "Carolina, PR" },
@@ -82,6 +79,14 @@ class ViajeForm extends Component {
       });
     });
   }
+
+  buscarTarjetas = cliente => {
+    getTarjetas(cliente)
+      .then(tarjetas => this.setState({ tarjetas }))
+      .catch(err => {
+        this.showError("Problemas para obtener lista de tarjetas.");
+      });
+  };
 
   onSubmit = () => {
     const {
