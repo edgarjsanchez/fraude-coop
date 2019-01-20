@@ -107,6 +107,7 @@ class ViajeForm extends Component {
       tarjeta: tarjeta,
       descripcion: descripcion
     };
+    console.log(data);
     const errors = this.validate(data);
     this.setState({ errors });
     if (Object.keys(errors).length === 0) {
@@ -132,6 +133,7 @@ class ViajeForm extends Component {
 
   validate = data => {
     const errors = {};
+    if (!data.tarjeta) errors.tarjeta = "Se requiere tarjeta.";
     if (!data.descripcion) errors.descripcion = "Se requiere razon.";
     if (!data.pais) errors.pais = "Se requiere pais.";
     if (!data.desde) errors.rango = "Se requiere rango de fechas.";

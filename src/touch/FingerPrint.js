@@ -25,14 +25,9 @@ export default class FingerPrint extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Button
-          transparent
-          success
-          onPress={this.clickHandler}
-          style={{ alignSelf: "center" }}
-        >
-          <Text style={{ fontSize: 14 }}>{`Use ${
+      <View>
+        <Button transparent success onPress={this.clickHandler}>
+          <Text style={{ fontSize: 14 }}>{`Usar ${
             this.state.biometryType
           }`}</Text>
         </Button>
@@ -40,12 +35,3 @@ export default class FingerPrint extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20
-  }
-});

@@ -1,33 +1,25 @@
 import axios from "axios";
+import { URL } from "../../src/utils/environment";
 
 var axiosrequest = axios.create();
 axiosrequest.defaults.timeout = 2500;
-
 export default {
   user: {
     login: credentials =>
-      axiosrequest
-        .post("http://192.168.89.130:8888/api/auth", { credentials })
-        .then(res => res.data.user),
+      axiosrequest.post(URL.auth, { credentials }).then(res => res.data.user),
     getViajes: cliente =>
-      axiosrequest
-        .post("http://192.168.89.130:8888/api/viajes", { cliente })
-        .then(res => res.data.viajes),
+      axiosrequest.post(URL.viajes, { cliente }).then(res => res.data.viajes),
     putViaje: viaje =>
-      axiosrequest
-        .put("http://192.168.89.130:8888/api/viajes", { viaje })
-        .then(res => res.data),
+      axiosrequest.put(URL.viajes, { viaje }).then(res => res.data),
     deleteViaje: key =>
-      axiosrequest
-        .delete(`http://192.168.89.130:8888/api/viajes/${key}`)
-        .then(res => res.data),
+      axiosrequest.delete(URL.viajes + `/${key}`).then(res => res.data),
     updateViaje: viaje =>
       axiosrequest
-        .post(`http://192.168.89.130:8888/api/viajes/${viaje.key}`, { viaje })
+        .post(URL.viajes + `/${viaje.key}`, { viaje })
         .then(res => res.data),
     getTarjetas: cliente =>
       axiosrequest
-        .post("http://192.168.89.130:8888/api/tarjetas", { cliente })
+        .post(URL.tarjetas, { cliente })
         .then(res => res.data.tarjetas)
   }
 };

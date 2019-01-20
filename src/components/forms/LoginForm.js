@@ -125,6 +125,9 @@ class LoginForm extends Component {
                 autoCapitalize="none"
                 placeholder="Usuario"
               />
+              {Platform.OS === "ios" && (
+                <FingerPrint auth={this.authenticate} />
+              )}
             </Item>
             <Item password error={!!errors.password}>
               <Icon active name="lock" />
@@ -134,15 +137,26 @@ class LoginForm extends Component {
                 value={data.password}
                 onChangeText={this.onChangePassword}
               />
+              <View>
+                <Button transparent success>
+                  <Text style={{ fontSize: 14, paddingRight: 15 }}>
+                    No recuerdo
+                  </Text>
+                </Button>
+              </View>
             </Item>
             <View style={{ marginTop: "10%" }}>
               <Button success block onPress={this.onSubmit} disabled={loading}>
-                {!loading && <Text>Log in</Text>}
+                {!loading && <Text>Accesar</Text>}
                 {loading && <Spinner color="white" />}
               </Button>
-              {Platform.OS === "ios" && (
-                <FingerPrint auth={this.authenticate} />
-              )}
+            </View>
+            <View style={{ marginTop: "10%" }}>
+              <Button transparent block onPress={this.onSubmit}>
+                {!loading && (
+                  <Text style={{ color: "grey" }}>Inscribase Al Servicio</Text>
+                )}
+              </Button>
             </View>
           </Form>
         </View>
