@@ -25,10 +25,24 @@ class LoginForm extends Component {
       password: ""
     },
     errors: {},
-    loading: false
+    loading: false,
+    showTouch: false
   };
 
   componentDidMount() {
+    Keychain.getGenericPassword()
+      .then(creds => {
+        //Alert.alert(JSON.stringify(creds));
+        if (creds) {
+          this.setState({ showTouch: true });
+        } else {
+          this.setState({ showTouch: false });
+        }
+      })
+      .catch(error => {
+        this.setState({ showTouch: false });
+      });
+
     AsyncStorage.getItem("usuario", (err, usuario) => {
       const { data } = this.state;
       this.setState({
@@ -88,10 +102,15 @@ class LoginForm extends Component {
     TouchID.authenticate()
       .then(() => {
         Keychain.getGenericPassword()
-          .then(creds => creds.password)
-          .then(token => {
-            setAuthorization(token);
-            this.props.navigation.replace("HomePage");
+          .then(credentials => {
+            const { data } = this.state;
+            this.setState({
+              data: { ...data, user: credentials.user }
+            });
+            this.setState({
+              data: { ...data, password: credentials.password }
+            });
+            this.onSubmit();
           })
           .catch(error => {
             console.log(error);
@@ -100,12 +119,12 @@ class LoginForm extends Component {
       })
       .catch(error => {
         console.log(error);
-        Alert.alert(error.message);
+        //Alert.alert(error.message);
       });
   };
 
   render() {
-    const { data, errors, loading } = this.state;
+    const { data, errors, loading, showTouch } = this.state;
 
     return (
       <Container style={styles.maincontainer}>
@@ -125,7 +144,7 @@ class LoginForm extends Component {
                 autoCapitalize="none"
                 placeholder="Usuario"
               />
-              {Platform.OS === "ios" && (
+              {Platform.OS === "ios" && showTouch && (
                 <FingerPrint auth={this.authenticate} />
               )}
             </Item>
