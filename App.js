@@ -4,6 +4,7 @@ import { Root } from "native-base";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LoginPage from "./src/components/pages/LoginPage";
 import HomePage from "./src/components/pages/HomePage";
+import SignupPage from "./src/components/pages/SignupPage";
 import ViajePage from "./src/components/pages/ViajePage";
 import EditViajePage from "./src/components/pages/EditViajePage";
 import Viajes from "./src/components/cliente/Viajes";
@@ -12,7 +13,8 @@ const AppNavigator = createStackNavigator({
   LoginPage: {
     screen: LoginPage,
     navigationOptions: {
-      header: null
+      header: null,
+      headerBackTitle: null
     }
   },
   HomePage: {
@@ -21,6 +23,9 @@ const AppNavigator = createStackNavigator({
       header: null,
       headerBackTitle: null
     }
+  },
+  SignupPage: {
+    screen: SignupPage
   },
   Viajes: {
     screen: Viajes

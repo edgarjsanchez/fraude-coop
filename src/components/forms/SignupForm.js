@@ -12,30 +12,20 @@ import {
 } from "native-base";
 import { Image, View, StyleSheet, Alert } from "react-native";
 import { PropTypes } from "prop-types";
-import { AsyncStorage, Platform } from "react-native";
-import FingerPrint from "../../touch/FingerPrint";
-import TouchID from "react-native-touch-id";
 import setAuthorization from "../../utils/setAuthorizationHeader";
-import * as Keychain from "react-native-keychain";
 
 class LoginForm extends Component {
   state = {
     data: {
-      user: "",
-      password: ""
+      cuenta: "",
+      segsoc: "",
+      email: "",
+      password: "",
+      password2: ""
     },
     errors: {},
     loading: false
   };
-
-  componentDidMount() {
-    AsyncStorage.getItem("usuario", (err, usuario) => {
-      const { data } = this.state;
-      this.setState({
-        data: { ...data, user: usuario }
-      });
-    });
-  }
 
   onSubmit = () => {
     const { data } = this.state;
@@ -61,10 +51,24 @@ class LoginForm extends Component {
     return errors;
   };
 
-  onChangeUser = text => {
+  onChangeCuenta = text => {
     const { data } = this.state;
     this.setState({
-      data: { ...data, user: text }
+      data: { ...data, cuenta: text.replace(/[^0-9]/g, "") }
+    });
+  };
+
+  onChangeSegsoc = text => {
+    const { data } = this.state;
+    this.setState({
+      data: { ...data, segsoc: text.replace(/[^0-9]/g, "") }
+    });
+  };
+
+  onChangeEmail = text => {
+    const { data } = this.state;
+    this.setState({
+      data: { ...data, email: text }
     });
   };
 
@@ -72,6 +76,13 @@ class LoginForm extends Component {
     const { data } = this.state;
     this.setState({
       data: { ...data, password: text }
+    });
+  };
+
+  onChangePassword2 = text => {
+    const { data } = this.state;
+    this.setState({
+      data: { ...data, password2: text }
     });
   };
 
@@ -84,82 +95,69 @@ class LoginForm extends Component {
     });
   };
 
-  authenticate = () => {
-    TouchID.authenticate()
-      .then(() => {
-        Keychain.getGenericPassword()
-          .then(creds => creds.password)
-          .then(token => {
-            setAuthorization(token);
-            this.props.navigation.replace("HomePage");
-          })
-          .catch(error => {
-            console.log(error);
-            Alert.alert(error.message);
-          });
-      })
-      .catch(error => {
-        console.log(error);
-        Alert.alert(error.message);
-      });
-  };
-
   render() {
     const { data, errors, loading } = this.state;
 
     return (
       <Container style={styles.maincontainer}>
-        <View style={styles.imagecontainer}>
-          <Image
-            source={require("../../images/bancacoop.png")}
-            style={styles.logo}
-          />
-        </View>
         <View>
           <Form>
-            <Item error={!!errors.user}>
-              <Icon active name="person" />
+            <Item error={!!errors.cuenta}>
+              <Icon active type="MaterialCommunityIcons" name="account-box" />
               <Input
-                value={data.user}
-                onChangeText={this.onChangeUser}
+                value={data.cuenta}
+                maxLength={9}
+                onChangeText={this.onChangeCuenta}
                 autoCapitalize="none"
-                placeholder="Usuario"
+                keyboardType="numeric"
+                placeholder="Numero Cuenta"
               />
-              {Platform.OS === "ios" && (
-                <FingerPrint auth={this.authenticate} />
-              )}
+            </Item>
+            <Item error={!!errors.segsoc}>
+              <Icon
+                active
+                type="MaterialCommunityIcons"
+                name="security-account"
+              />
+              <Input
+                value={data.segsoc}
+                maxLength={4}
+                onChangeText={this.onChangeSegsoc}
+                autoCapitalize="none"
+                placeholder="Ultimos 4 Digitos Seguro Social"
+              />
+            </Item>
+            <Item error={!!errors.user}>
+              <Icon active type="MaterialCommunityIcons" name="email" />
+              <Input
+                value={data.email}
+                onChangeText={this.onChangeEmail}
+                autoCapitalize="none"
+                placeholder="Email"
+              />
             </Item>
             <Item password error={!!errors.password}>
-              <Icon active name="lock" />
+              <Icon active type="MaterialCommunityIcons" name="lock" />
               <Input
                 secureTextEntry
                 placeholder="Password"
                 value={data.password}
                 onChangeText={this.onChangePassword}
               />
-              <View>
-                <Button transparent success>
-                  <Text style={{ fontSize: 14, paddingRight: 15 }}>
-                    No recuerdo
-                  </Text>
-                </Button>
-              </View>
+            </Item>
+            <Item password error={!!errors.password2}>
+              <Icon active type="MaterialCommunityIcons" name="lock" />
+              <Input
+                secureTextEntry
+                placeholder="Confirme Password"
+                value={data.password2}
+                onChangeText={this.onChangePassword2}
+              />
             </Item>
             <View style={{ marginTop: "10%" }}>
               <Button success block onPress={this.onSubmit} disabled={loading}>
-                {!loading && <Text>Accesar</Text>}
+                {!loading && <Text>Enviar</Text>}
                 {loading && <Spinner color="white" />}
-              </Button>
-            </View>
-            <View style={{ marginTop: "10%" }}>
-              <Button
-                transparent
-                block
-                onPress={() => this.props.navigation.navigate("SignupPage")}
-              >
-                {!loading && (
-                  <Text style={{ color: "grey" }}>Inscribase Al Servicio</Text>
-                )}
               </Button>
             </View>
           </Form>
