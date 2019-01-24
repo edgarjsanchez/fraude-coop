@@ -53,19 +53,24 @@ class LoginForm extends Component {
 
   validate = data => {
     const errors = {};
+    //Validar campos en blanco
     if (!data.cuenta) errors.cuenta = "Se requiere cuenta.";
     if (!data.segsoc) errors.segsoc = "Se requiere SS.";
     if (!data.email) errors.email = "Se require email.";
-    if (!Validator.isEmail(data.email)) {
-      errors.email = "Email invalido";
-      this.showError("Email no es valido.");
-    }
     if (!data.password) errors.password = "Se requiere password.";
     if (!data.password2) errors.password2 = "Se requiere password.";
-    if (data.password !== data.password2) {
+    //Validar largo SS - 4 digitos
+    if (!Validator.isLength(data.segsoc, 4, 4)) errors.segsoc = "Min largo 4";
+    //Validar passwords
+    if (data.password != data.password2) {
       errors.password = "Passwords no son iguales.";
       errors.password2 = "Passwords no son iguales.";
-      this.showError("Password no son iguales.");
+      this.showError("Passwords no son iguales.");
+    }
+    //Validar email
+    if (data.email && !Validator.isEmail(data.email)) {
+      errors.email = "Email invalido";
+      this.showError("Email no es valido.");
     }
     return errors;
   };
@@ -186,7 +191,7 @@ class LoginForm extends Component {
           </Item>
           <View style={{ marginTop: "10%" }}>
             <Button success block onPress={this.onSubmit} disabled={loading}>
-              {!loading && <Text>Inscribirse</Text>}
+              {!loading && <Text>Continuar</Text>}
               {loading && <Spinner color="white" />}
             </Button>
           </View>

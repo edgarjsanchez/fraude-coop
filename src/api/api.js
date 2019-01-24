@@ -20,6 +20,8 @@ export default {
     getTarjetas: cliente =>
       axiosrequest
         .post(URL.tarjetas, { cliente })
-        .then(res => res.data.tarjetas)
+        .then(res => res.data.tarjetas),
+    inscripcion: credentials =>
+      axiosrequest.post(URL.usuario, { credentials }).then(res => res.data)
   }
 };

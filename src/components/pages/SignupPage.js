@@ -1,17 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import SignupForm from "../forms/SignupForm";
-import { login } from "../../api/auth";
-import setAuthorization from "../../utils/setAuthorizationHeader";
-import * as Keychain from "react-native-keychain";
+import { inscripcion } from "../../api/auth";
 
 class LoginPage extends React.Component {
   submit = data =>
-    login(data).then(res => {
-      Keychain.setGenericPassword("session", res.token).then(() => {
-        setAuthorization(res.token);
-        this.props.navigation.replace("HomePage");
-      });
+    inscripcion(data).then(() => {
+      this.props.navigation.replace("LoginPage");
     });
 
   render() {
