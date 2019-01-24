@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-  Container,
   Form,
   Item,
   Input,
@@ -10,9 +9,15 @@ import {
   Toast,
   Spinner
 } from "native-base";
-import { Image, View, StyleSheet, Alert } from "react-native";
+import {
+  Keyboard,
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Alert
+} from "react-native";
 import { PropTypes } from "prop-types";
-import setAuthorization from "../../utils/setAuthorizationHeader";
+import Validator from "validator";
 
 class LoginForm extends Component {
   state = {
@@ -28,11 +33,13 @@ class LoginForm extends Component {
   };
 
   onSubmit = () => {
+    Keyboard.dismiss();
     const { data } = this.state;
     const errors = this.validate(data);
     this.setState({ errors });
     if (Object.keys(errors).length === 0) {
       this.setState({ loading: true });
+      console.log(data);
       this.props.submit(data).catch(error => {
         this.setState({ loading: false });
         if (error.response) {
@@ -46,8 +53,20 @@ class LoginForm extends Component {
 
   validate = data => {
     const errors = {};
-    if (!data.user) errors.user = "Se require usuario.";
+    if (!data.cuenta) errors.cuenta = "Se requiere cuenta.";
+    if (!data.segsoc) errors.segsoc = "Se requiere SS.";
+    if (!data.email) errors.email = "Se require email.";
+    if (!Validator.isEmail(data.email)) {
+      errors.email = "Email invalido";
+      this.showError("Email no es valido.");
+    }
     if (!data.password) errors.password = "Se requiere password.";
+    if (!data.password2) errors.password2 = "Se requiere password.";
+    if (data.password !== data.password2) {
+      errors.password = "Passwords no son iguales.";
+      errors.password2 = "Passwords no son iguales.";
+      this.showError("Password no son iguales.");
+    }
     return errors;
   };
 
@@ -99,70 +118,80 @@ class LoginForm extends Component {
     const { data, errors, loading } = this.state;
 
     return (
-      <Container style={styles.maincontainer}>
-        <View>
-          <Form>
-            <Item error={!!errors.cuenta}>
-              <Icon active type="MaterialCommunityIcons" name="account-box" />
-              <Input
-                value={data.cuenta}
-                maxLength={9}
-                onChangeText={this.onChangeCuenta}
-                autoCapitalize="none"
-                keyboardType="numeric"
-                placeholder="Numero Cuenta"
-              />
-            </Item>
-            <Item error={!!errors.segsoc}>
-              <Icon
-                active
-                type="MaterialCommunityIcons"
-                name="security-account"
-              />
-              <Input
-                value={data.segsoc}
-                maxLength={4}
-                onChangeText={this.onChangeSegsoc}
-                autoCapitalize="none"
-                placeholder="Ultimos 4 Digitos Seguro Social"
-              />
-            </Item>
-            <Item error={!!errors.user}>
-              <Icon active type="MaterialCommunityIcons" name="email" />
-              <Input
-                value={data.email}
-                onChangeText={this.onChangeEmail}
-                autoCapitalize="none"
-                placeholder="Email"
-              />
-            </Item>
-            <Item password error={!!errors.password}>
-              <Icon active type="MaterialCommunityIcons" name="lock" />
-              <Input
-                secureTextEntry
-                placeholder="Password"
-                value={data.password}
-                onChangeText={this.onChangePassword}
-              />
-            </Item>
-            <Item password error={!!errors.password2}>
-              <Icon active type="MaterialCommunityIcons" name="lock" />
-              <Input
-                secureTextEntry
-                placeholder="Confirme Password"
-                value={data.password2}
-                onChangeText={this.onChangePassword2}
-              />
-            </Item>
-            <View style={{ marginTop: "10%" }}>
-              <Button success block onPress={this.onSubmit} disabled={loading}>
-                {!loading && <Text>Enviar</Text>}
-                {loading && <Spinner color="white" />}
-              </Button>
-            </View>
-          </Form>
-        </View>
-      </Container>
+      <KeyboardAvoidingView
+        style={styles.maincontainer}
+        behavior="padding"
+        enabled
+      >
+        <Form>
+          <Item error={!!errors.cuenta}>
+            <Icon active type="MaterialCommunityIcons" name="account-box" />
+            <Input
+              value={data.cuenta}
+              maxLength={9}
+              onChangeText={this.onChangeCuenta}
+              autoCapitalize="none"
+              keyboardType="numeric"
+              placeholder="Numero Cuenta"
+              style={styles.label}
+            />
+          </Item>
+          <Item error={!!errors.segsoc}>
+            <Icon
+              active
+              type="MaterialCommunityIcons"
+              name="security-account"
+            />
+            <Input
+              value={data.segsoc}
+              maxLength={4}
+              onChangeText={this.onChangeSegsoc}
+              autoCapitalize="none"
+              keyboardType="numeric"
+              placeholder="Ultimos 4 Digitos Seguro Social"
+              style={styles.label}
+            />
+          </Item>
+          <Item error={!!errors.email}>
+            <Icon active type="MaterialCommunityIcons" name="email" />
+            <Input
+              value={data.email}
+              onChangeText={this.onChangeEmail}
+              autoCapitalize="none"
+              placeholder="Email"
+              style={styles.label}
+            />
+          </Item>
+          <Item password error={!!errors.password}>
+            <Icon active type="MaterialCommunityIcons" name="lock" />
+            <Input
+              secureTextEntry
+              placeholder="Password"
+              value={data.password}
+              onChangeText={this.onChangePassword}
+              autoCapitalize="none"
+              style={styles.label}
+            />
+          </Item>
+          <Item password error={!!errors.password2}>
+            <Icon active type="MaterialCommunityIcons" name="lock" />
+            <Input
+              secureTextEntry
+              placeholder="Confirme Password"
+              value={data.password2}
+              onChangeText={this.onChangePassword2}
+              autoCapitalize="none"
+              style={styles.label}
+            />
+          </Item>
+          <View style={{ marginTop: "10%" }}>
+            <Button success block onPress={this.onSubmit} disabled={loading}>
+              {!loading && <Text>Inscribirse</Text>}
+              {loading && <Spinner color="white" />}
+            </Button>
+          </View>
+        </Form>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -178,11 +207,7 @@ export default LoginForm;
 const styles = StyleSheet.create({
   maincontainer: {
     padding: "5%",
-    flex: 1,
-    justifyContent: "center"
+    flex: 1
   },
-  imagecontainer: {
-    alignItems: "center"
-  },
-  logo: { width: 310, height: 90 }
+  label: { fontSize: 15 }
 });

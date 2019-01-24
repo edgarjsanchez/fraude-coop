@@ -170,9 +170,10 @@ class ViajeForm extends Component {
     return (
       <Container>
         <Form>
-          <Item fixedLabel error={!!errors.tarjeta} style={{ marginTop: "5%" }}>
-            <Label>Tarjeta:</Label>
+          <Item fixedLabel error={!!errors.tarjeta} style={styles.item}>
+            <Label style={styles.label}>Tarjeta:</Label>
             <Picker
+              textStyle={styles.label}
               placeholder="Seleccione tarjetas"
               mode="dropdown"
               Header="Escoja"
@@ -196,13 +197,10 @@ class ViajeForm extends Component {
               })}
             </Picker>
           </Item>
-          <Item
-            fixedLabel
-            error={!!errors.descripcion}
-            style={{ marginTop: "5%" }}
-          >
-            <Label>Razon:</Label>
+          <Item fixedLabel error={!!errors.descripcion} style={styles.item}>
+            <Label style={styles.label}>Razon:</Label>
             <Picker
+              textStyle={styles.label}
               placeholder="Seleccione razon"
               mode="dropdown"
               Header="Escoja"
@@ -226,9 +224,10 @@ class ViajeForm extends Component {
               })}
             </Picker>
           </Item>
-          <Item fixedLabel error={!!errors.pais} style={{ marginTop: "5%" }}>
-            <Label>Pais:</Label>
+          <Item fixedLabel error={!!errors.pais} style={styles.item}>
+            <Label style={styles.label}>Pais:</Label>
             <Picker
+              textStyle={styles.label}
               placeholder="Seleccione ciudad, pais"
               mode="dropdown"
               Header="Escoja"
@@ -249,10 +248,10 @@ class ViajeForm extends Component {
             </Picker>
           </Item>
           <Item fixedLabel error={!!errors.rango}>
-            <Label>Periodo:</Label>
-            <Input value={rango} />
+            <Label style={styles.label}>Periodo:</Label>
+            <Input value={rango} style={styles.label} editable={false} />
           </Item>
-          <Item error={!!errors.rango}>
+          <Item fixedLabel error={!!errors.rango}>
             <View style={styles.container}>
               <DateRangePicker
                 initialRange={[desde, hasta]}
@@ -265,7 +264,7 @@ class ViajeForm extends Component {
             </View>
           </Item>
         </Form>
-        <View style={{ marginTop: "10%", marginHorizontal: "10%" }}>
+        <View style={styles.boton}>
           <Button success block onPress={this.onSubmit} disabled={loading}>
             <Text>Aceptar</Text>
           </Button>
@@ -284,11 +283,13 @@ ViajeForm.propTypes = {
 export default ViajeForm;
 
 const styles = StyleSheet.create({
-  maincontainer: {
-    flex: 1
+  item: {
+    marginTop: "5%"
   },
   container: {
     flex: 1,
     alignItems: "stretch"
-  }
+  },
+  label: { fontSize: 15 },
+  boton: { marginTop: "10%", marginHorizontal: "10%" }
 });

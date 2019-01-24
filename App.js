@@ -25,7 +25,10 @@ const AppNavigator = createStackNavigator({
     }
   },
   SignupPage: {
-    screen: SignupPage
+    screen: SignupPage,
+    navigationOptions: {
+      headerTitle: "Inscripcion"
+    }
   },
   Viajes: {
     screen: Viajes
