@@ -9,7 +9,8 @@ import * as Keychain from "react-native-keychain";
 class LoginPage extends React.Component {
   submit = data =>
     login(data).then(res => {
-      AsyncStorage.setItem("usuario", res.login);
+      console.log(res);
+      AsyncStorage.setItem("usuario", res.email);
       Keychain.setGenericPassword(data.user, data.password).then(() => {
         setAuthorization(res.token);
         this.props.navigation.replace("HomePage");

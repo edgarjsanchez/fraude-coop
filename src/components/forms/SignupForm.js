@@ -114,7 +114,7 @@ class LoginForm extends Component {
     Toast.show({
       text: msg,
       buttonText: "Ok",
-      duration: 3000,
+      duration: 5000,
       type: "danger"
     });
   };

@@ -70,7 +70,7 @@ class LoginForm extends Component {
 
   validate = data => {
     const errors = {};
-    if (!data.user) errors.user = "Se require usuario.";
+    if (!data.user) errors.user = "Se require email.";
     if (!data.password) errors.password = "Se requiere password.";
     return errors;
   };
@@ -142,7 +142,7 @@ class LoginForm extends Component {
                 value={data.user}
                 onChangeText={this.onChangeUser}
                 autoCapitalize="none"
-                placeholder="Usuario"
+                placeholder="Usuario o Email"
               />
               {Platform.OS === "ios" && showTouch && (
                 <FingerPrint auth={this.authenticate} />
