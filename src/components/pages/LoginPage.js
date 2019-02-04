@@ -11,7 +11,7 @@ class LoginPage extends React.Component {
     login(data).then(res => {
       console.log(res);
       AsyncStorage.setItem("usuario", res.email);
-      Keychain.setGenericPassword(data.user, data.password).then(() => {
+      Keychain.setGenericPassword(res.email, data.password).then(() => {
         setAuthorization(res.token);
         this.props.navigation.replace("HomePage");
       });

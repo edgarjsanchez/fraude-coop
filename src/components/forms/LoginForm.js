@@ -15,7 +15,6 @@ import { PropTypes } from "prop-types";
 import { AsyncStorage, Platform } from "react-native";
 import FingerPrint from "../../touch/FingerPrint";
 import TouchID from "react-native-touch-id";
-import setAuthorization from "../../utils/setAuthorizationHeader";
 import * as Keychain from "react-native-keychain";
 
 class LoginForm extends Component {
@@ -26,28 +25,32 @@ class LoginForm extends Component {
     },
     errors: {},
     loading: false,
-    showTouch: false
+    showTouch: false,
+    storedUser: ""
   };
 
   componentDidMount() {
-    Keychain.getGenericPassword()
-      .then(creds => {
-        //Alert.alert(JSON.stringify(creds));
-        if (creds) {
-          this.setState({ showTouch: true });
-        } else {
-          this.setState({ showTouch: false });
-        }
-      })
-      .catch(error => {
-        this.setState({ showTouch: false });
-      });
-
+    //Keychain.resetGenericPassword();
+    //AsyncStorage.removeItem("usuario");
     AsyncStorage.getItem("usuario", (err, usuario) => {
       const { data } = this.state;
       this.setState({
         data: { ...data, user: usuario }
       });
+      this.setState({ storedUser: usuario });
+      Keychain.getGenericPassword()
+        .then(creds => {
+          if (creds) {
+            if (creds.username == usuario) {
+              this.setState({ showTouch: true });
+            }
+          } else {
+            this.setState({ showTouch: false });
+          }
+        })
+        .catch(error => {
+          this.setState({ showTouch: false });
+        });
     });
   }
 
@@ -76,7 +79,12 @@ class LoginForm extends Component {
   };
 
   onChangeUser = text => {
-    const { data } = this.state;
+    const { data, storedUser } = this.state;
+    if (storedUser == text) {
+      this.setState({ showTouch: true });
+    } else {
+      this.setState({ showTouch: false });
+    }
     this.setState({
       data: { ...data, user: text }
     });
