@@ -10,7 +10,7 @@ import {
   Toast,
   Spinner
 } from "native-base";
-import { Image, View, StyleSheet, Alert } from "react-native";
+import { Image, View, StyleSheet, Alert, Keyboard } from "react-native";
 import { PropTypes } from "prop-types";
 import { AsyncStorage, Platform } from "react-native";
 import FingerPrint from "../../touch/FingerPrint";
@@ -55,6 +55,7 @@ class LoginForm extends Component {
   }
 
   onSubmit = () => {
+    Keyboard.dismiss();
     const { data } = this.state;
     const errors = this.validate(data);
     this.setState({ errors });
@@ -165,7 +166,13 @@ class LoginForm extends Component {
                 onChangeText={this.onChangePassword}
               />
               <View>
-                <Button transparent success>
+                <Button
+                  transparent
+                  success
+                  onPress={() =>
+                    this.props.navigation.navigate("ForgotPasswordPage")
+                  }
+                >
                   <Text style={{ fontSize: 14, paddingRight: 15 }}>
                     No recuerdo
                   </Text>

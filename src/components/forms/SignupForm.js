@@ -19,7 +19,7 @@ import {
 import { PropTypes } from "prop-types";
 import Validator from "validator";
 
-class LoginForm extends Component {
+class SignupForm extends Component {
   state = {
     data: {
       cuenta: "",
@@ -201,13 +201,13 @@ class LoginForm extends Component {
   }
 }
 
-LoginForm.propTypes = {
+SignupForm.propTypes = {
   submit: PropTypes.func.isRequired,
   navigation: PropTypes.shape({
     replace: PropTypes.func.isRequired
   }).isRequired
 };
-export default LoginForm;
+export default SignupForm;
 
 const styles = StyleSheet.create({
   maincontainer: {

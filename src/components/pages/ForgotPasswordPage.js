@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import SignupForm from "../forms/SignupForm";
+import ForgotPasswordForm from "../forms/ForgotPasswordForm";
 import { inscripcion } from "../../api/auth";
 import { Alert } from "react-native";
 
-class SignupPage extends React.Component {
+class ForgotPasswordPage extends React.Component {
   submit = data =>
     inscripcion(data).then(() => {
       Alert.alert(
@@ -15,15 +15,18 @@ class SignupPage extends React.Component {
 
   render() {
     return (
-      <SignupForm submit={this.submit} navigation={this.props.navigation} />
+      <ForgotPasswordForm
+        submit={this.submit}
+        navigation={this.props.navigation}
+      />
     );
   }
 }
 
-SignupPage.propTypes = {
+ForgotPasswordPage.propTypes = {
   navigation: PropTypes.shape({
     replace: PropTypes.func.isRequired
   }).isRequired
 };
 
-export default SignupPage;
+export default ForgotPasswordPage;

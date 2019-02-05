@@ -22,6 +22,10 @@ export default {
         .post(URL.tarjetas, { cliente })
         .then(res => res.data.tarjetas),
     inscripcion: credentials =>
-      axiosrequest.post(URL.usuario, { credentials }).then(res => res.data)
+      axiosrequest.post(URL.usuario, { credentials }).then(res => res.data),
+    resetPasswordRequest: email =>
+      axiosrequest.post("/api/auth/reset_password_request", { email }),
+    validateToken: token => axios.post("/api/auth/validate_token", { token }),
+    resetPassword: data => axios.post("/api/auth/reset_password", { data })
   }
 };

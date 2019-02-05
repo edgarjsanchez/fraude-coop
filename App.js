@@ -3,8 +3,9 @@ import React from "react";
 import { Root } from "native-base";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import LoginPage from "./src/components/pages/LoginPage";
-import HomePage from "./src/components/pages/HomePage";
 import SignupPage from "./src/components/pages/SignupPage";
+import ForgotPasswordPage from "./src/components/pages/ForgotPasswordPage";
+import HomePage from "./src/components/pages/HomePage";
 import ViajePage from "./src/components/pages/ViajePage";
 import EditViajePage from "./src/components/pages/EditViajePage";
 import Viajes from "./src/components/cliente/Viajes";
@@ -28,6 +29,12 @@ const AppNavigator = createStackNavigator({
     screen: SignupPage,
     navigationOptions: {
       headerTitle: "Registro"
+    }
+  },
+  ForgotPasswordPage: {
+    screen: ForgotPasswordPage,
+    navigationOptions: {
+      headerTitle: "Olvido Password"
     }
   },
   Viajes: {
