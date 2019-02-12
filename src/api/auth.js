@@ -14,7 +14,7 @@ export const updateViaje = viaje => api.user.updateViaje(viaje);
 
 export const getTarjetas = cliente => api.user.getTarjetas(cliente);
 
-export const resetPasswordRequest = ({ email }) => () =>
+export const resetPasswordRequest = email =>
   api.user.resetPasswordRequest(email);
 
 export const validateToken = token => () => api.user.validateToken(token);

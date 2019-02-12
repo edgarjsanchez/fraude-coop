@@ -1,18 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import ForgotPasswordForm from "../forms/ForgotPasswordForm";
-import { inscripcion } from "../../api/auth";
+import { resetPasswordRequest } from "../../api/auth";
 import { Alert } from "react-native";
 
 class ForgotPasswordPage extends React.Component {
   submit = data =>
-    inscripcion(data).then(() => {
+    resetPasswordRequest(data).then(() => {
       Alert.alert(
-        "Pedido de acceso enviado, verifique su email para confirmacion."
+        "Pedido de reset de password enviado, verifique su email para continuar."
       );
       this.props.navigation.replace("LoginPage");
     });
-
   render() {
     return (
       <ForgotPasswordForm
