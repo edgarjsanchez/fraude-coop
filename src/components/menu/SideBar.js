@@ -14,8 +14,13 @@ import {
   Switch
 } from "native-base";
 import { Image, StyleSheet } from "react-native";
+import setAuthorization from "../../utils/setAuthorizationHeader";
 
 class SideBar extends Component {
+  logout = () => {
+    setAuthorization();
+    this.props.navigator.navigate("LoginPage");
+  };
   render() {
     return (
       <Container>
@@ -56,10 +61,7 @@ class SideBar extends Component {
                 <Switch value={false} />
               </Right>
             </ListItem>
-            <ListItem
-              button
-              onPress={() => this.props.navigator.navigate("LoginPage")}
-            >
+            <ListItem button onPress={() => this.logout()}>
               <Text>Log out</Text>
             </ListItem>
           </List>

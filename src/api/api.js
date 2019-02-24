@@ -1,8 +1,8 @@
 import axios from "axios";
 import { URL } from "../../src/utils/environment";
-
 var axiosrequest = axios.create();
 axiosrequest.defaults.timeout = 2500;
+
 export default {
   user: {
     login: credentials =>

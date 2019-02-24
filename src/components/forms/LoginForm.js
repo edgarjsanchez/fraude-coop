@@ -66,6 +66,7 @@ class LoginForm extends Component {
         if (error.response) {
           this.showError(error.response.data.errors.global);
         } else if (error.request) {
+          console.log(error);
           this.showError("Servicio No Disponible.");
         }
       });
