@@ -18,6 +18,7 @@ import DateRangePicker from "../../utils/DateRangePicker";
 import { LocaleConfig } from "react-native-calendars";
 import { espanol } from "../../utils/calendario";
 import { getTarjetas } from "../../api/auth";
+import { ScrollView } from "react-native-gesture-handler";
 
 LocaleConfig.locales["es"] = espanol;
 LocaleConfig.defaultLocale = "es";
@@ -168,7 +169,7 @@ class ViajeForm extends Component {
     } = this.state;
 
     return (
-      <Container>
+      <ScrollView>
         <Form>
           <Item fixedLabel error={!!errors.tarjeta} style={styles.item}>
             <Label style={styles.label}>Tarjeta:</Label>
@@ -269,7 +270,7 @@ class ViajeForm extends Component {
             <Text>Aceptar</Text>
           </Button>
         </View>
-      </Container>
+      </ScrollView>
     );
   }
 }

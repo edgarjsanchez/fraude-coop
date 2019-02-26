@@ -121,5 +121,5 @@ const styles = StyleSheet.create({
     padding: "5%",
     flex: 1
   },
-  label: { fontSize: 15 }
+  label: { fontSize: 16 }
 });

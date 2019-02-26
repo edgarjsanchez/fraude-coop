@@ -15,12 +15,27 @@ import {
 } from "native-base";
 import { Image, StyleSheet } from "react-native";
 import setAuthorization from "../../utils/setAuthorizationHeader";
+import { NavigationActions, StackActions } from "react-navigation";
 
 class SideBar extends Component {
   logout = () => {
+    this.resetStack();
     setAuthorization();
-    this.props.navigator.navigate("LoginPage");
   };
+
+  resetStack = () => {
+    this.props.navigator.dispatch(
+      StackActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({
+            routeName: "LoginPage"
+          })
+        ]
+      })
+    );
+  };
+
   render() {
     return (
       <Container>
@@ -61,7 +76,7 @@ class SideBar extends Component {
                 <Switch value={false} />
               </Right>
             </ListItem>
-            <ListItem button onPress={() => this.logout()}>
+            <ListItem button onPress={this.resetStack}>
               <Text>Log out</Text>
             </ListItem>
           </List>
