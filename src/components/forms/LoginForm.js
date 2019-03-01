@@ -38,19 +38,25 @@ class LoginForm extends Component {
         data: { ...data, user: usuario }
       });
       this.setState({ storedUser: usuario });
-      Keychain.getGenericPassword()
-        .then(creds => {
-          if (creds) {
-            if (creds.username == usuario) {
-              this.setState({ showTouch: true });
-            }
-          } else {
-            this.setState({ showTouch: false });
-          }
-        })
-        .catch(error => {
-          this.setState({ showTouch: false });
-        });
+      AsyncStorage.getItem("touchid" + usuario, (err, touch_id) => {
+        console.log(usuario);
+        console.log(touch_id);
+        if (touch_id == "true") {
+          Keychain.getGenericPassword()
+            .then(creds => {
+              if (creds) {
+                if (creds.username == usuario) {
+                  this.setState({ showTouch: true });
+                }
+              } else {
+                this.setState({ showTouch: false });
+              }
+            })
+            .catch(error => {
+              this.setState({ showTouch: false });
+            });
+        }
+      });
     });
   }
 

@@ -13,15 +13,38 @@ import {
   Icon,
   Switch
 } from "native-base";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, AsyncStorage } from "react-native";
 import setAuthorization from "../../utils/setAuthorizationHeader";
 import { NavigationActions, StackActions } from "react-navigation";
 
 class SideBar extends Component {
-  logout = () => {
-    this.resetStack();
-    setAuthorization();
+  state = {
+    touchid: false,
+    usuario: ""
   };
+
+  logout = () => {
+    setAuthorization();
+    this.resetStack();
+  };
+
+  onChangeState = value => {
+    this.setState({ touchid: value });
+    AsyncStorage.setItem("touchid" + this.state.usuario, value.toString());
+  };
+
+  componentDidMount() {
+    AsyncStorage.getItem("usuario", (err, usuario) => {
+      if (usuario) {
+        this.setState({ usuario });
+        AsyncStorage.getItem("touchid" + usuario, (err, touch_id) => {
+          if (touch_id == "true") {
+            this.setState({ touchid: true });
+          }
+        });
+      }
+    });
+  }
 
   resetStack = () => {
     this.props.navigator.dispatch(
@@ -37,6 +60,8 @@ class SideBar extends Component {
   };
 
   render() {
+    const { touchid } = this.state;
+
     return (
       <Container>
         <Content>
@@ -64,16 +89,11 @@ class SideBar extends Component {
               <Text>Personal</Text>
             </ListItem>
             <ListItem icon>
-              <Left>
-                <Button style={{ backgroundColor: "#FF9501" }}>
-                  <Icon active type="FontAwesome" name="plane" />
-                </Button>
-              </Left>
               <Body>
-                <Text>Airplane Mode</Text>
+                <Text>Login usando Touch ID</Text>
               </Body>
               <Right>
-                <Switch value={false} />
+                <Switch value={touchid} onValueChange={this.onChangeState} />
               </Right>
             </ListItem>
             <ListItem button onPress={this.resetStack}>
