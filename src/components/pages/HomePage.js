@@ -22,10 +22,11 @@ import Viajes from "../cliente/Viajes";
 export class Home extends Component {
   state = {
     refreshing: false,
-    viajes: []
+    viajes: [],
+    touch_id: false
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.buscarViajes();
   }
 

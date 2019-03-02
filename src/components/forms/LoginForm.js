@@ -39,8 +39,6 @@ class LoginForm extends Component {
       });
       this.setState({ storedUser: usuario });
       AsyncStorage.getItem("touchid" + usuario, (err, touch_id) => {
-        console.log(usuario);
-        console.log(touch_id);
         if (touch_id == "true") {
           Keychain.getGenericPassword()
             .then(creds => {
