@@ -27,14 +27,7 @@ class LoginPage extends React.Component {
             [
               {
                 text: "No",
-                onPress: () => {
-                  Keychain.setGenericPassword(res.email, data.password).then(
-                    () => {
-                      setAuthorization(res.token);
-                      this.props.navigation.replace("HomePage");
-                    }
-                  );
-                },
+                onPress: () => {},
                 style: "cancel"
               },
               {
@@ -53,6 +46,10 @@ class LoginPage extends React.Component {
             { cancelable: false }
           );
         }
+        Keychain.setGenericPassword(res.email, data.password).then(() => {
+          setAuthorization(res.token);
+          this.props.navigation.replace("HomePage");
+        });
       });
     });
 
