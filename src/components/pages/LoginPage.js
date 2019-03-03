@@ -12,8 +12,20 @@ class LoginPage extends React.Component {
     setAuthorization(corpID.token);
   }
 
-  activaTouchID = usuario => {
-    AsyncStorage.setItem("touchid" + usuario, "true");
+  entradaActivaTouchID = (res, password) => {
+    AsyncStorage.setItem("touchid" + res.email, "true", () => {
+      Keychain.setGenericPassword(res.email, password).then(() => {
+        setAuthorization(res.token);
+        this.props.navigation.replace("HomePage");
+      });
+    });
+  };
+
+  entrada = (res, password) => {
+    Keychain.setGenericPassword(res.email, password).then(() => {
+      setAuthorization(res.token);
+      this.props.navigation.replace("HomePage");
+    });
   };
 
   submit = data =>
@@ -27,29 +39,23 @@ class LoginPage extends React.Component {
             [
               {
                 text: "No",
-                onPress: () => {},
+                onPress: () => {
+                  this.entrada(res, data.password);
+                },
                 style: "cancel"
               },
               {
                 text: "Ok",
                 onPress: () => {
-                  this.activaTouchID(res.email);
-                  Keychain.setGenericPassword(res.email, data.password).then(
-                    () => {
-                      setAuthorization(res.token);
-                      this.props.navigation.replace("HomePage");
-                    }
-                  );
+                  this.entradaActivaTouchID(res, data.password);
                 }
               }
             ],
             { cancelable: false }
           );
+        } else {
+          this.entrada(res, data.password);
         }
-        Keychain.setGenericPassword(res.email, data.password).then(() => {
-          setAuthorization(res.token);
-          this.props.navigation.replace("HomePage");
-        });
       });
     });
 
