@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LoginForm from "../forms/LoginForm";
-import { AsyncStorage, Alert } from "react-native";
+import { AsyncStorage, Alert, Platform } from "react-native";
 import { login } from "../../api/auth";
 import setAuthorization from "../../utils/setAuthorizationHeader";
 import * as Keychain from "react-native-keychain";
@@ -31,7 +31,7 @@ class LoginPage extends React.Component {
   submit = data =>
     login(data).then(res => {
       AsyncStorage.getItem("usuario", (err, usuario) => {
-        if (usuario != res.email) {
+        if (usuario != res.email && Platform.OS === "ios") {
           AsyncStorage.setItem("usuario", res.email);
           Alert.alert(
             "Aviso",

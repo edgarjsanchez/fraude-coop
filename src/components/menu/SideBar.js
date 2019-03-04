@@ -6,14 +6,11 @@ import {
   ListItem,
   Text,
   View,
-  Left,
   Body,
   Right,
-  Button,
-  Icon,
   Switch
 } from "native-base";
-import { Image, StyleSheet, AsyncStorage } from "react-native";
+import { Image, StyleSheet, AsyncStorage, Platform } from "react-native";
 import setAuthorization from "../../utils/setAuthorizationHeader";
 import { NavigationActions, StackActions } from "react-navigation";
 
@@ -88,14 +85,16 @@ class SideBar extends Component {
             <ListItem>
               <Text>Personal</Text>
             </ListItem>
-            <ListItem icon>
-              <Body>
-                <Text>Login usando Touch ID</Text>
-              </Body>
-              <Right>
-                <Switch value={touchid} onValueChange={this.onChangeState} />
-              </Right>
-            </ListItem>
+            {Platform.OS === "ios" && (
+              <ListItem icon>
+                <Body>
+                  <Text>Login usando Touch ID</Text>
+                </Body>
+                <Right>
+                  <Switch value={touchid} onValueChange={this.onChangeState} />
+                </Right>
+              </ListItem>
+            )}
             <ListItem button onPress={this.resetStack}>
               <Text>Log out</Text>
             </ListItem>
