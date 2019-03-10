@@ -45,6 +45,7 @@ class LoginForm extends Component {
               if (creds) {
                 if (creds.username == usuario) {
                   this.setState({ showTouch: true });
+                  this.authenticate();
                 }
               } else {
                 this.setState({ showTouch: false });
