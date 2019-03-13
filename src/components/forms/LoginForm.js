@@ -12,10 +12,12 @@ import {
 } from "native-base";
 import { Image, View, StyleSheet, Alert, Keyboard } from "react-native";
 import { PropTypes } from "prop-types";
-import { AsyncStorage, Platform } from "react-native";
+import { AsyncStorage, Platform, Dimensions } from "react-native";
 import FingerPrint from "../../touch/FingerPrint";
 import TouchID from "react-native-touch-id";
 import * as Keychain from "react-native-keychain";
+import LoginImage from "../../images/bancacoop.png";
+import { ScaledSheet } from "react-native-size-matters";
 
 class LoginForm extends Component {
   state = {
@@ -144,15 +146,17 @@ class LoginForm extends Component {
       <Container style={styles.maincontainer}>
         <View style={styles.imagecontainer}>
           <Image
-            source={require("../../images/bancacoop.png")}
-            style={styles.logo}
+            source={LoginImage}
+            resizeMode="contain"
+            style={{ width: Dimensions.get("window").width / 2 }}
           />
         </View>
-        <View>
+        <View style={styles.formcontainer}>
           <Form>
             <Item error={!!errors.user}>
               <Icon active name="person" />
               <Input
+                style={styles.input_text}
                 value={data.user}
                 onChangeText={this.onChangeUser}
                 autoCapitalize="none"
@@ -165,6 +169,7 @@ class LoginForm extends Component {
             <Item password error={!!errors.password}>
               <Icon active name="lock" />
               <Input
+                style={styles.input_text}
                 secureTextEntry
                 placeholder="Password"
                 value={data.password}
@@ -178,15 +183,13 @@ class LoginForm extends Component {
                     this.props.navigation.navigate("ForgotPasswordPage")
                   }
                 >
-                  <Text style={{ fontSize: 14, paddingRight: 15 }}>
-                    No recuerdo
-                  </Text>
+                  <Text style={styles.green_link_text}>No recuerdo</Text>
                 </Button>
               </View>
             </Item>
             <View style={{ marginTop: "10%" }}>
               <Button success block onPress={this.onSubmit} disabled={loading}>
-                {!loading && <Text>Accesar</Text>}
+                {!loading && <Text style={styles.button_text}>Accesar</Text>}
                 {loading && <Spinner color="white" />}
               </Button>
             </View>
@@ -197,7 +200,9 @@ class LoginForm extends Component {
                 onPress={() => this.props.navigation.navigate("SignupPage")}
               >
                 {!loading && (
-                  <Text style={{ color: "grey" }}>Inscribase Al Servicio</Text>
+                  <Text style={styles.inscription_text}>
+                    Inscribase Al Servicio
+                  </Text>
                 )}
               </Button>
             </View>
@@ -216,14 +221,21 @@ LoginForm.propTypes = {
 };
 export default LoginForm;
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   maincontainer: {
-    padding: "5%",
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center"
   },
   imagecontainer: {
     alignItems: "center"
   },
-  logo: { width: 310, height: 90 }
+  formcontainer: {
+    width: "90%",
+    maxWidth: 600
+  },
+  inscription_text: { color: "grey", fontSize: "16@ms0.4" },
+  input_text: { fontSize: "15@ms0.4" },
+  button_text: { fontSize: "16@ms0.4" },
+  green_link_text: { fontSize: "14@ms0.4", paddingRight: 15 }
 });

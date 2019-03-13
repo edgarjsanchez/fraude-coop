@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, Text } from "native-base";
+import { ScaledSheet } from "react-native-size-matters";
 
 import TouchID from "react-native-touch-id";
 
@@ -26,12 +27,18 @@ export default class FingerPrint extends Component {
   render() {
     return (
       <View>
-        <Button transparent success onPress={this.clickHandler}>
-          <Text style={{ fontSize: 14 }}>{`Usar ${
-            this.state.biometryType
-          }`}</Text>
-        </Button>
+        {this.state.biometryType != "None" && (
+          <Button transparent success onPress={this.clickHandler}>
+            <Text style={styles.green_link_text}>{`Usar ${
+              this.state.biometryType
+            }`}</Text>
+          </Button>
+        )}
       </View>
     );
   }
 }
+
+const styles = ScaledSheet.create({
+  green_link_text: { fontSize: "14@ms0.4", paddingRight: 15 }
+});
