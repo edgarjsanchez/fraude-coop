@@ -9,15 +9,10 @@ import {
   Toast,
   Spinner
 } from "native-base";
-import {
-  Keyboard,
-  View,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Alert
-} from "react-native";
+import { Keyboard, View, StyleSheet } from "react-native";
 import { PropTypes } from "prop-types";
 import Validator from "validator";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 class SignupForm extends Component {
   state = {
@@ -123,11 +118,7 @@ class SignupForm extends Component {
     const { data, errors, loading } = this.state;
 
     return (
-      <KeyboardAvoidingView
-        style={styles.maincontainer}
-        behavior="padding"
-        enabled
-      >
+      <KeyboardAwareScrollView style={styles.maincontainer}>
         <Form>
           <Item error={!!errors.cuenta}>
             <Icon active type="MaterialCommunityIcons" name="account-box" />
@@ -196,7 +187,7 @@ class SignupForm extends Component {
             </Button>
           </View>
         </Form>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     );
   }
 }

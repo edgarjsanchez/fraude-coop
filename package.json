@@ -18,6 +18,7 @@
     "react-native-dotenv": "^0.2.0",
     "react-native-easy-grid": "^0.2.0",
     "react-native-gesture-handler": "^1.0.10",
+    "react-native-keyboard-aware-scroll-view": "^0.8.0",
     "react-native-keychain": "^3.0.0",
     "react-native-size-matters": "^0.1.6",
     "react-native-touch-id": "^4.3.0",

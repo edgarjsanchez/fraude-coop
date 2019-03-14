@@ -10,7 +10,7 @@ import {
   Toast,
   Spinner
 } from "native-base";
-import { Image, View, StyleSheet, Alert, Keyboard } from "react-native";
+import { Image, View, Alert, Keyboard } from "react-native";
 import { PropTypes } from "prop-types";
 import { AsyncStorage, Platform, Dimensions } from "react-native";
 import FingerPrint from "../../touch/FingerPrint";
@@ -18,6 +18,7 @@ import TouchID from "react-native-touch-id";
 import * as Keychain from "react-native-keychain";
 import LoginImage from "../../images/bancacoop.png";
 import { ScaledSheet } from "react-native-size-matters";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 class LoginForm extends Component {
   state = {
@@ -143,72 +144,79 @@ class LoginForm extends Component {
     const { data, errors, loading, showTouch } = this.state;
 
     return (
-      <Container style={styles.maincontainer}>
-        <View style={styles.imagecontainer}>
-          <Image
-            source={LoginImage}
-            resizeMode="contain"
-            style={{ width: Dimensions.get("window").width / 2 }}
-          />
-        </View>
-        <View style={styles.formcontainer}>
-          <Form>
-            <Item error={!!errors.user}>
-              <Icon active name="person" />
-              <Input
-                style={styles.input_text}
-                value={data.user}
-                onChangeText={this.onChangeUser}
-                autoCapitalize="none"
-                placeholder="Usuario o Email"
-              />
-              {Platform.OS === "ios" && showTouch && (
-                <FingerPrint auth={this.authenticate} />
-              )}
-            </Item>
-            <Item password error={!!errors.password}>
-              <Icon active name="lock" />
-              <Input
-                style={styles.input_text}
-                secureTextEntry
-                placeholder="Password"
-                value={data.password}
-                onChangeText={this.onChangePassword}
-              />
-              <View>
+      <KeyboardAwareScrollView>
+        <Container style={styles.maincontainer}>
+          <View style={styles.imagecontainer}>
+            <Image
+              source={LoginImage}
+              resizeMode="contain"
+              style={{ width: Dimensions.get("window").width / 2 }}
+            />
+          </View>
+          <View style={styles.formcontainer}>
+            <Form>
+              <Item error={!!errors.user}>
+                <Icon active name="person" />
+                <Input
+                  style={styles.input_text}
+                  value={data.user}
+                  onChangeText={this.onChangeUser}
+                  autoCapitalize="none"
+                  placeholder="Usuario o Email"
+                />
+                {Platform.OS === "ios" && showTouch && (
+                  <FingerPrint auth={this.authenticate} />
+                )}
+              </Item>
+              <Item password error={!!errors.password}>
+                <Icon active name="lock" />
+                <Input
+                  style={styles.input_text}
+                  secureTextEntry
+                  placeholder="Password"
+                  value={data.password}
+                  onChangeText={this.onChangePassword}
+                />
+                <View>
+                  <Button
+                    transparent
+                    success
+                    onPress={() =>
+                      this.props.navigation.navigate("ForgotPasswordPage")
+                    }
+                  >
+                    <Text style={styles.green_link_text}>No recuerdo</Text>
+                  </Button>
+                </View>
+              </Item>
+              <View style={{ marginTop: "10%" }}>
                 <Button
-                  transparent
                   success
-                  onPress={() =>
-                    this.props.navigation.navigate("ForgotPasswordPage")
-                  }
+                  block
+                  onPress={this.onSubmit}
+                  disabled={loading}
                 >
-                  <Text style={styles.green_link_text}>No recuerdo</Text>
+                  {!loading && <Text style={styles.button_text}>Accesar</Text>}
+                  {loading && <Spinner color="white" />}
                 </Button>
               </View>
-            </Item>
-            <View style={{ marginTop: "10%" }}>
-              <Button success block onPress={this.onSubmit} disabled={loading}>
-                {!loading && <Text style={styles.button_text}>Accesar</Text>}
-                {loading && <Spinner color="white" />}
-              </Button>
-            </View>
-            <View style={{ marginTop: "10%" }}>
-              <Button
-                transparent
-                block
-                onPress={() => this.props.navigation.navigate("SignupPage")}
-              >
-                {!loading && (
-                  <Text style={styles.inscription_text}>
-                    Inscribase Al Servicio
-                  </Text>
-                )}
-              </Button>
-            </View>
-          </Form>
-        </View>
-      </Container>
+              <View style={{ marginTop: "10%" }}>
+                <Button
+                  transparent
+                  block
+                  onPress={() => this.props.navigation.navigate("SignupPage")}
+                >
+                  {!loading && (
+                    <Text style={styles.inscription_text}>
+                      Inscribase Al Servicio
+                    </Text>
+                  )}
+                </Button>
+              </View>
+            </Form>
+          </View>
+        </Container>
+      </KeyboardAwareScrollView>
     );
   }
 }
