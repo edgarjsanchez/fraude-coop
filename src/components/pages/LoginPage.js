@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LoginForm from "../forms/LoginForm";
-import { AsyncStorage, Alert, Platform } from "react-native";
+import { Alert, Platform } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { login } from "../../api/auth";
 import setAuthorization from "../../utils/setAuthorizationHeader";
 import * as Keychain from "react-native-keychain";

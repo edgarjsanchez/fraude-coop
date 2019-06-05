@@ -12,7 +12,8 @@ import {
 } from "native-base";
 import { Image, View, Alert, Keyboard } from "react-native";
 import { PropTypes } from "prop-types";
-import { AsyncStorage, Platform, Dimensions } from "react-native";
+import { Platform, Dimensions } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import FingerPrint from "../../touch/FingerPrint";
 import TouchID from "react-native-touch-id";
 import * as Keychain from "react-native-keychain";

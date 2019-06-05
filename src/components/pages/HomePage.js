@@ -14,7 +14,8 @@ import {
   Toast,
   Drawer
 } from "native-base";
-import { RefreshControl, AsyncStorage } from "react-native";
+import { RefreshControl } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 import { getViajes, deleteViaje } from "../../api/auth";
 import SideBar from "../menu/SideBar";
 import Viajes from "../cliente/Viajes";
